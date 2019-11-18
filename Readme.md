@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Александр Палкин](https://up.htmlacademy.ru/ecmascript/10/user/615813).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Чебаков](https://up.htmlacademy.ru/ecmascript/10/user/1100789).
 
 ---
 
