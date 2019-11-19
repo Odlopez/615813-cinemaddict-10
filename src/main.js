@@ -21,7 +21,7 @@ const getProfileMarkup = () => `
       <p class="profile__rating">Movie Buff</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>
-  `;
+`;
 
 const getMenuMarkup = () => `
     <nav class="main-navigation">
@@ -31,7 +31,7 @@ const getMenuMarkup = () => `
       <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
       <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
     </nav>
-  `;
+`;
 
 const getSortMarkup = () => `
     <ul class="sort">
@@ -39,7 +39,7 @@ const getSortMarkup = () => `
       <li><a href="#" class="sort__button">Sort by date</a></li>
       <li><a href="#" class="sort__button">Sort by rating</a></li>
     </ul>
-  `;
+`;
 
 const getFilmDetailsMarkup = () => `
     <section class="film-details" style="display: none;">
@@ -211,7 +211,7 @@ const getFilmDetailsMarkup = () => `
         </div>
       </form>
     </section>
-  `;
+`;
 
 const getCardMarkup = () => `
   <article class="film-card">
@@ -231,7 +231,7 @@ const getCardMarkup = () => `
       <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
     </form>
   </article>
-  `;
+`;
 
 const getSearchMarkup = () => `
     <form class="header__search search">
@@ -242,11 +242,11 @@ const getSearchMarkup = () => `
       <button type="submit" class="visually-hidden">Search</button>
       <button class="search__reset" type="reset">Reset</button>
     </form>
-  `;
+`;
 
 const getReadMoreButtonMarkup = () => `
     <button class="films-list__show-more">Show more</button>
-  `;
+`;
 
 const fillCardsMarkup = (cardsQuantity) => new Array(cardsQuantity).fill(getCardMarkup()).join(``);
 
@@ -260,7 +260,7 @@ const getFilmsListMarkup = (cardsQuantity) => `
 
       ${getReadMoreButtonMarkup()}
     </section>
-  `;
+`;
 
 const getFilmsExtraListMarkup = (title, cardsQuantity) => `
     <section class="films-list--extra">
@@ -270,7 +270,7 @@ const getFilmsExtraListMarkup = (title, cardsQuantity) => `
         ${fillCardsMarkup(cardsQuantity)}
       </div>
     </section>
-  `;
+`;
 
 const getContentMarkup = (options) => `
     <section class="films">
@@ -278,7 +278,7 @@ const getContentMarkup = (options) => `
       ${getFilmsExtraListMarkup(options.leftExtraTitle, options.leftExtraCardsCount)}
       ${getFilmsExtraListMarkup(options.rightExtraTitle, options.rightExtraCardsCount)}
     </section>
-  `;
+`;
 
 const drawIndexMarkup = (options) => {
   renderElement(header, getSearchMarkup());
