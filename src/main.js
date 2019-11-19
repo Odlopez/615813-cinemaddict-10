@@ -1,13 +1,13 @@
 "use strict";
 
-const CARD_COUNT = 5;
-const EXTRA_CARD_COUNT = 2;
+const CARD_QUANTTITY = 5;
+const EXTRA_CARD_QUANTTITY = 2;
 const contentOptions = {
-  cardsCount: CARD_COUNT,
+  cardsCount: CARD_QUANTTITY,
   leftExtraTitle: `Top rated`,
-  leftExtraCardsCount: EXTRA_CARD_COUNT,
+  leftExtraCardsCount: EXTRA_CARD_QUANTTITY,
   rightExtraTitle: `Most commented`,
-  rightExtraCardsCount: EXTRA_CARD_COUNT,
+  rightExtraCardsCount: EXTRA_CARD_QUANTTITY,
 };
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
@@ -16,17 +16,14 @@ const renderElement = (container, markup, position = `beforeend`) => {
   container.insertAdjacentHTML(position, markup);
 };
 
-const getProfileMarkup = () => {
-  return `
+const getProfileMarkup = () => `
     <section class="header__profile profile">
       <p class="profile__rating">Movie Buff</p>
       <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
     </section>
   `;
-};
 
-const getMenuMarkup = () => {
-  return `
+const getMenuMarkup = () => `
     <nav class="main-navigation">
       <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
       <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
@@ -35,20 +32,16 @@ const getMenuMarkup = () => {
       <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
     </nav>
   `;
-};
 
-const getSortMarkup = () => {
-  return `
+const getSortMarkup = () => `
     <ul class="sort">
       <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
       <li><a href="#" class="sort__button">Sort by date</a></li>
       <li><a href="#" class="sort__button">Sort by rating</a></li>
     </ul>
   `;
-};
 
-const getFilmDetailsMarkup = () => {
-  return `
+const getFilmDetailsMarkup = () => `
     <section class="film-details" style="display: none;">
       <form class="film-details__inner" action="" method="get">
         <div class="form-details__top-container">
@@ -219,10 +212,8 @@ const getFilmDetailsMarkup = () => {
       </form>
     </section>
   `;
-};
 
-const getCardMarkup = () => {
-  return `
+const getCardMarkup = () => `
   <article class="film-card">
     <h3 class="film-card__title">The Dance of Life</h3>
     <p class="film-card__rating">8.3</p>
@@ -241,10 +232,8 @@ const getCardMarkup = () => {
     </form>
   </article>
   `;
-};
 
-const getSearchMarkup = () => {
-  return `
+const getSearchMarkup = () => `
     <form class="header__search search">
       <input type="text" name="search" class="search__field" placeholder="Search movies" value="popeye">
       <svg fill="#7171D8" class="search__film-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19">
@@ -254,20 +243,14 @@ const getSearchMarkup = () => {
       <button class="search__reset" type="reset">Reset</button>
     </form>
   `;
-};
 
-const getReadMoreButtonMarkup = () => {
-  return `
+const getReadMoreButtonMarkup = () => `
     <button class="films-list__show-more">Show more</button>
   `;
-};
 
-const fillCardsMarkup = (count) => {
-  return new Array(count).fill(getCardMarkup()).join(``);
-};
+const fillCardsMarkup = (cardsQuantity) => new Array(cardsQuantity).fill(getCardMarkup()).join(``);
 
-const getFilmsListMarkup = (cardsQuantity) => {
-  return `
+const getFilmsListMarkup = (cardsQuantity) => `
     <section class="films-list">
       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
 
@@ -278,10 +261,8 @@ const getFilmsListMarkup = (cardsQuantity) => {
       ${getReadMoreButtonMarkup()}
     </section>
   `;
-};
 
-const getFilmsExtraListMarkup = (title, cardsQuantity) => {
-  return `
+const getFilmsExtraListMarkup = (title, cardsQuantity) => `
     <section class="films-list--extra">
       <h2 class="films-list__title">${title}</h2>
 
@@ -290,17 +271,14 @@ const getFilmsExtraListMarkup = (title, cardsQuantity) => {
       </div>
     </section>
   `;
-};
 
-const getContentMarkup = (options) => {
-  return `
+const getContentMarkup = (options) => `
     <section class="films">
       ${getFilmsListMarkup(options.cardsCount)}
       ${getFilmsExtraListMarkup(options.leftExtraTitle, options.leftExtraCardsCount)}
       ${getFilmsExtraListMarkup(options.rightExtraTitle, options.rightExtraCardsCount)}
     </section>
   `;
-};
 
 const drawIndexMarkup = (options) => {
   renderElement(header, getSearchMarkup());
