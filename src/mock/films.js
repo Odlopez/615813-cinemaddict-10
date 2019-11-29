@@ -44,6 +44,9 @@ export const getFilmDataObject = () => {
     duration: transformFilmDuration(getRandomNumber(300, 15)),
     genre: getRandomItem(genres),
     description: getMockDescription(),
-    comments: getRandomNumber(50)
+    comments: getRandomNumber(50),
+    watchlist: !!getRandomNumber(1),
+    history: !!getRandomNumber(1),
+    favorites: !!getRandomNumber(1)
   };
 };

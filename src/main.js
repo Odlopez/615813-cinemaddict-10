@@ -13,7 +13,7 @@ import {getFilmDataObject} from './mock/films';
 const filmsData = new Array(filmNames.length).fill(``).map(getFilmDataObject);
 
 const userWatchedFilmsQuantity = getRandomNumber(30);
-const filtersData = getFiltersData();
+const filtersData = getFiltersData(filmsData);
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
