@@ -1,4 +1,5 @@
 import {filterItems} from '../constants';
+import {getFiltersData} from '../mock/menu';
 
 /**
  * Генерирует разметку одного пункта фильтра
@@ -24,13 +25,13 @@ const getFiltersMarkup = (filtersData) => filterItems.map((item) => getItemFilte
 /**
  * Генерирует разметку всего меню с фильтрами
  *
- * @param {Object} filtersData объект с данными о фильмах в пунктах фильтра
+ * @param {Object} filmsData массив с данными карточек фильмов
  * @return {String} возвращщает разметку компонента меню
  */
-export const getMenuComponent = (filtersData) => `
+export const getMenuComponent = (filmsData) => `
   <nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    ${getFiltersMarkup(filtersData)}
+    ${getFiltersMarkup(getFiltersData(filmsData))}
     <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
   </nav>
 `;

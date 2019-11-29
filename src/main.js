@@ -7,7 +7,7 @@ import {getFilmDetailsMarkup} from './components/film-details';
 import {getContentComponent} from './components/content';
 import {getRandomNumber} from './utils';
 import {filmNames, extraListsOptions} from './constants';
-import {getFiltersData} from './mock/menu';
+
 import {getFilmDataObject} from './mock/films';
 
 const filmsData = new Array(filmNames.length).fill(``).map(getFilmDataObject);
@@ -24,7 +24,7 @@ const renderElement = (container, markup, position = `beforeend`) => {
 
 const drawIndexMarkup = () => {
   renderElement(header, getProfileComponent(userWatchedFilmsQuantity));
-  renderElement(main, getMenuComponent(filtersData));
+  renderElement(main, getMenuComponent(filmsData));
   renderElement(main, getSortMarkup());
   renderElement(main, getContentComponent(filmsData, extraListsOptions));
   renderElement(main, getFilmDetailsMarkup());

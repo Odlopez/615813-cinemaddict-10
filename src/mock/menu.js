@@ -1,9 +1,11 @@
 import {filterItems} from '../constants';
 
 /**
+ * Подсчитывает в массиве данных количество фильмов, соответствующих заданной категории
  *
- * @param {Array} filmsData
- * @param {String} category
+ * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {String} category категория, по которой фильтруем данные фильмов
+ * @return {Number} количество фильмов соответстующей категории
  */
 const countsFilmAsCategory = (filmsData, category) => {
   return filmsData.reduce((hoarder, item) => {
@@ -15,7 +17,8 @@ const countsFilmAsCategory = (filmsData, category) => {
 /**
  * Генерирует данные для пунктов меню фильтра
  *
- * @return {Object} сгенерированные моковые данные для меню фильтров
+ * @param {Array} filmsData массив с данными карточек фильмов
+ * @return {Object}
  */
 export const getFiltersData = (filmsData) => {
   const filtersData = {};
