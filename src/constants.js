@@ -4,3 +4,4 @@ export const ratings = new Map([
   [20, `fan`],
   [Infinity, `movie buff`]
 ]);
+export const filterItems = [`Watchlist`, `History`, `Favorites`];
