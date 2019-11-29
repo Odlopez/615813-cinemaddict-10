@@ -1,21 +1,17 @@
 import {getProfileComponent} from './components/profile';
 import {getMenuComponent} from './components/menu';
 import {getSortMarkup} from './components/sort';
-import {getContentMarkup} from './components/content';
+import {getFilmsListMarkup} from './components/films-list';
+import {getFilmsExtraListComponent} from './components/films-extra-list';
 import {getFilmDetailsMarkup} from './components/film-details';
+import {getContentComponent} from './components/content';
 import {getRandomNumber} from './utils';
+import {filmNames, extraListsOptions} from './constants';
 import {getFiltersData} from './mock/menu';
+import {getFilmDataObject} from './mock/films';
 
-const CARD_QUANTTITY = 5;
-const EXTRA_CARD_QUANTTITY = 2;
+const filmsData = new Array(filmNames.length).fill(``).map(getFilmDataObject);
 
-const contentOptions = {
-  cardsCount: CARD_QUANTTITY,
-  leftExtraTitle: `Top rated`,
-  leftExtraCardsCount: EXTRA_CARD_QUANTTITY,
-  rightExtraTitle: `Most commented`,
-  rightExtraCardsCount: EXTRA_CARD_QUANTTITY,
-};
 const userWatchedFilmsQuantity = getRandomNumber(30);
 const filtersData = getFiltersData();
 
@@ -26,12 +22,12 @@ const renderElement = (container, markup, position = `beforeend`) => {
   container.insertAdjacentHTML(position, markup);
 };
 
-const drawIndexMarkup = (options) => {
+const drawIndexMarkup = () => {
   renderElement(header, getProfileComponent(userWatchedFilmsQuantity));
   renderElement(main, getMenuComponent(filtersData));
   renderElement(main, getSortMarkup());
-  renderElement(main, getContentMarkup(options));
+  renderElement(main, getContentComponent(filmsData, extraListsOptions));
   renderElement(main, getFilmDetailsMarkup());
 };
 
-drawIndexMarkup(contentOptions);
+drawIndexMarkup();

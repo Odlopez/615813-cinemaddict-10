@@ -40,8 +40,10 @@ const getFilmsExtraListMarkup = (title, cardsData) => `
   */
 export const getFilmsExtraListComponent = (title, sortProperty, filmsData) => {
   if (isNotRating(filmsData, sortProperty)) {
-    filmsData = [];
-  } else if (isEqualRating(filmsData, sortProperty)) {
+    return ``;
+  }
+
+  if (isEqualRating(filmsData, sortProperty)) {
     filmsData = sortFisherYates(filmsData, true).slice(0, EXTRA_CARD_QUANTITY);
   } else {
     filmsData = sortDataFilmsArray(filmsData, sortProperty).slice(0, EXTRA_CARD_QUANTITY);
