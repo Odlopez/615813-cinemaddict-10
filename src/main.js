@@ -1,12 +1,14 @@
 import {getSearchMarkup} from './components/search';
-import {getProfileMarkup} from './components/profile';
+import {getProfileComponent} from './components/profile';
 import {getMenuMarkup} from './components/menu';
 import {getSortMarkup} from './components/sort';
 import {getContentMarkup} from './components/content';
 import {getFilmDetailsMarkup} from './components/film-details';
+import {getRandomNumber} from './utils';
 
 const CARD_QUANTTITY = 5;
 const EXTRA_CARD_QUANTTITY = 2;
+
 const contentOptions = {
   cardsCount: CARD_QUANTTITY,
   leftExtraTitle: `Top rated`,
@@ -14,6 +16,8 @@ const contentOptions = {
   rightExtraTitle: `Most commented`,
   rightExtraCardsCount: EXTRA_CARD_QUANTTITY,
 };
+const userWatchedFilmsQuantity = getRandomNumber(30);
+
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
@@ -23,7 +27,7 @@ const renderElement = (container, markup, position = `beforeend`) => {
 
 const drawIndexMarkup = (options) => {
   renderElement(header, getSearchMarkup());
-  renderElement(header, getProfileMarkup());
+  renderElement(header, getProfileComponent(userWatchedFilmsQuantity));
   renderElement(main, getMenuMarkup());
   renderElement(main, getSortMarkup());
   renderElement(main, getContentMarkup(options));
