@@ -1,4 +1,5 @@
 import {MAX_LENGTH_DESCRIPTION} from '../constants';
+import {transformFilmDuration} from '../utils';
 
 /**
  * Обрезает строку с описанием фильма до допустимой длинны
@@ -25,9 +26,9 @@ const getCardComponent = (data) => `
     <h3 class="film-card__title">${data.name}</h3>
     <p class="film-card__rating">${data.rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${data.year}</span>
-      <span class="film-card__duration">${data.duration}</span>
-      <span class="film-card__genre">${data.genre[0]}</span>
+      <span class="film-card__year">${new Date(data.date).getFullYear()}</span>
+      <span class="film-card__duration">${transformFilmDuration(data.duration)}</span>
+      <span class="film-card__genre">${data.genres[0]}</span>
     </p>
     <img src="images/posters/${data.poster}" alt="Постер ${data.name}" class="film-card__poster">
     <p class="film-card__description">${cropDescription(data.description)}</p>

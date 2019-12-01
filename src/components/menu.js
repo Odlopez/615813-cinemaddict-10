@@ -26,7 +26,7 @@ const getFiltersMarkup = (filtersData) => filterItems.map((item) => getItemFilte
 /**
  * Генерирует разметку всего меню с фильтрами
  *
- * @param {Object} filmsData массив с данными карточек фильмов
+ * @param {Array} filmsData массив с данными карточек фильмов
  * @return {String} возвращщает разметку компонента меню
  */
 export const getMenuComponent = (filmsData) => `

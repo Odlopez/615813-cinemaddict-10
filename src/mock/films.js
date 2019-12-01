@@ -5,19 +5,6 @@ const filmNamesArray = sortFisherYates(filmNames, true);
 const descriptionSentences = descriptionFish.split(`\n`);
 
 /**
- * Генерирует строковое представление продолжительности фильма на основании длительности в минутах
- *
- * @param {Number} duration длительность фильма в минутах
- * @return {String} строка с продожительностью фильма вида {x}h {y}m
- */
-const transformFilmDuration = (duration) => {
-  const hours = Math.floor(duration / 60);
-  const minutes = duration - hours * 60;
-
-  return `${hours}h ${minutes}m`;
-};
-
-/**
  * Генерирует описание к фильму
  *
  * @return {String} строка с описанием фильма
@@ -55,6 +42,13 @@ const getRandomCommentsArray = () => {
 };
 
 /**
+ * Возвращает случаную дату
+ *
+ * @return {Number} случаная дата в миллисекундах
+ */
+const getRandomDate = () => new Date(getRandomNumber(2019, 1930), getRandomNumber(0, 11), getRandomNumber(0, 31)).getTime();
+
+/**
  * Генерирует объект с моковыми данными для карточки фильма
  *
  * @return {Object}
@@ -62,11 +56,15 @@ const getRandomCommentsArray = () => {
 export const getFilmDataObject = () => {
   return {
     name: filmNamesArray.pop(),
+    director: `Anthony Mann`,
+    writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
+    actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
+    country: `Uganda`,
     poster: getRandomItem(posters),
-    rating: getRandomNumber(100, 10) / 10,
-    year: getRandomNumber(2019, 1930),
-    duration: transformFilmDuration(getRandomNumber(300, 15)),
-    genre: getRandomGenresArray(),
+    rating: (getRandomNumber(100, 10) / 10).toFixed(1),
+    date: getRandomDate(),
+    duration: getRandomNumber(300, 15),
+    genres: getRandomGenresArray(),
     description: getMockDescription(),
     comments: getRandomCommentsArray(),
     age: getRandomNumber(18),

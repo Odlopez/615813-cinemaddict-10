@@ -1,4 +1,9 @@
-export const getFilmDetailsMarkup = () => `
+import {transformFilmDuration, getDateString, renderElement} from '../utils';
+import {ESC_KEYCODE} from '../constants';
+
+const main = document.querySelector(`.main`);
+
+const getFilmDetailsMarkup = (data) => `
   <section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -7,59 +12,57 @@ export const getFilmDetailsMarkup = () => `
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+            <img class="film-details__poster-img" src="images/posters/${data.poster}" alt="">
 
-            <p class="film-details__age">18+</p>
+            <p class="film-details__age">${data.age}+</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">The Great Flamarion</h3>
-                <p class="film-details__title-original">Original: The Great Flamarion</p>
+                <h3 class="film-details__title">${data.name}</h3>
+                <p class="film-details__title-original">Original: ${data.name}</p>
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">8.9</p>
+                <p class="film-details__total-rating">${data.rating}</p>
               </div>
             </div>
 
             <table class="film-details__table">
               <tbody><tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">Anthony Mann</td>
+                <td class="film-details__cell">${data.director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                <td class="film-details__cell">${data.writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                <td class="film-details__cell">${data.actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">30 March 1945</td>
+                <td class="film-details__cell">${getDateString(data.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">1h 18m</td>
+                <td class="film-details__cell">${transformFilmDuration(data.duration)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">USA</td>
+                <td class="film-details__cell">${data.country}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre">Drama</span>
-                  <span class="film-details__genre">Film-Noir</span>
-                  <span class="film-details__genre">Mystery</span></td>
+                  ${data.genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
               </tr>
             </tbody></table>
 
             <p class="film-details__film-description">
-              The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion's other assistant. Flamarion falls in love with Connie, the movie's femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.
+              ${data.description}
             </p>
           </div>
         </div>
@@ -169,3 +172,49 @@ export const getFilmDetailsMarkup = () => `
     </form>
   </section>
 `;
+
+
+/**
+ * Функция-callback для обработчика нажатия на клавиатуру
+ * закрывакт попап фильма при нажатии на esc
+ *
+ * @param {Event} evt
+ */
+const onDocumentKeydown = (evt) => {
+  evt.preventDefault();
+
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+/**
+ * Закрывает открытый попап фильма, снимает обработчики
+ */
+const closePopup = () => {
+  const popup = document.querySelector(`.film-details`);
+  const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
+
+  popupCloseButton.removeEventListener(`click`, onPopupCloseButtonClick);
+  document.removeEventListener(`keydown`, onDocumentKeydown);
+
+  popup.remove();
+};
+
+/**
+ * Функция-callback для обработчика клика по кнопке закрытия попапа
+ * закрывает открытый попап фильма
+ */
+const onPopupCloseButtonClick = () => {
+  closePopup();
+};
+
+export const renderPopupComponent = (data) => {
+  renderElement(main, getFilmDetailsMarkup(data));
+
+  const popup = document.querySelector(`.film-details`);
+  const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
+
+  popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
+  document.addEventListener(`keydown`, onDocumentKeydown);
+};

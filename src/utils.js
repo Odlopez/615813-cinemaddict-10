@@ -1,3 +1,5 @@
+import {monthNames} from './constants';
+
 /**
  * Возвращает случайное число в заданном диапазоне
  *
@@ -65,4 +67,29 @@ export const sortDataFilmsArray = (dataFilmsArray, name) => {
  */
 export const renderElement = (container, markup, position = `beforeend`) => {
   container.insertAdjacentHTML(position, markup);
+};
+
+/**
+ * Генерирует строковое представление продолжительности фильма на основании длительности в минутах
+ *
+ * @param {Number} duration длительность фильма в минутах
+ * @return {String} строка с продожительностью фильма вида {x}h {y}m
+ */
+export const transformFilmDuration = (duration) => {
+  const hours = Math.floor(duration / 60);
+  const minutes = duration - hours * 60;
+
+  return `${hours ? `${hours}h ` : ``}${minutes}m`;
+};
+
+/**
+ * Возвращает строковое представление даты фильма
+ *
+ * @param {Number} dateTime дата в миллисекундах
+ * @return {String} дата вида DD Mont-name YYY
+ */
+export const getDateString = (dateTime) => {
+  const date = new Date(dateTime);
+
+  return `${date.getDay()}  ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 };
