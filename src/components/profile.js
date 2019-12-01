@@ -19,8 +19,10 @@ const getProfileMarkup = (rating) => `
  * @param {Number} filmsQuantity количество просмотренных фильмов
  * @return {String} разметка компонента "профиль"
  */
-export const getProfileComponent = (filmsQuantity) => {
+const getProfileComponent = (filmsQuantity) => {
   const rating = getStringRating(filmsQuantity);
 
   return getProfileMarkup(rating);
 };
+
+export {getProfileComponent};

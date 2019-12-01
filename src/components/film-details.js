@@ -3,7 +3,13 @@ import {ESC_KEYCODE} from '../constants';
 
 const main = document.querySelector(`.main`);
 
-const getFilmDetailsMarkup = (data) => `
+/**
+ * Генерирует разметку равернутой карточки фильма в зависимсоти от переданных данных
+ *
+ * @param {Object} film объект с данными фильма
+ * @return {String} строковое представление разметки развернутой карточки фильма
+ */
+const getFilmDetailsMarkup = (film) => `
   <section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -12,57 +18,57 @@ const getFilmDetailsMarkup = (data) => `
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="images/posters/${data.poster}" alt="">
+            <img class="film-details__poster-img" src="images/posters/${film.poster}" alt="">
 
-            <p class="film-details__age">${data.age}+</p>
+            <p class="film-details__age">${film.age}+</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">${data.name}</h3>
-                <p class="film-details__title-original">Original: ${data.name}</p>
+                <h3 class="film-details__title">${film.name}</h3>
+                <p class="film-details__title-original">Original: ${film.name}</p>
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${data.rating}</p>
+                <p class="film-details__total-rating">${film.rating}</p>
               </div>
             </div>
 
             <table class="film-details__table">
               <tbody><tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">${data.director}</td>
+                <td class="film-details__cell">${film.director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${data.writers.join(`, `)}</td>
+                <td class="film-details__cell">${film.writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">${data.actors.join(`, `)}</td>
+                <td class="film-details__cell">${film.actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${getDateString(data.date)}</td>
+                <td class="film-details__cell">${getDateString(film.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${transformFilmDuration(data.duration)}</td>
+                <td class="film-details__cell">${transformFilmDuration(film.duration)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${data.country}</td>
+                <td class="film-details__cell">${film.country}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  ${data.genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
+                  ${film.genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
               </tr>
             </tbody></table>
 
             <p class="film-details__film-description">
-              ${data.description}
+              ${film.description}
             </p>
           </div>
         </div>
@@ -209,8 +215,8 @@ const onPopupCloseButtonClick = () => {
   closePopup();
 };
 
-export const renderPopupComponent = (data) => {
-  renderElement(main, getFilmDetailsMarkup(data));
+const renderPopupComponent = (film) => {
+  renderElement(main, getFilmDetailsMarkup(film));
 
   const popup = document.querySelector(`.film-details`);
   const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
@@ -218,3 +224,5 @@ export const renderPopupComponent = (data) => {
   popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
   document.addEventListener(`keydown`, onDocumentKeydown);
 };
+
+export {renderPopupComponent};

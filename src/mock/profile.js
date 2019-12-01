@@ -6,7 +6,7 @@ import {ratings} from '../constants';
  * @param {Number} filmsQuantity количество просмотренных фильмов
  * @return {String} строковое представление рейтинга пользователя
  */
-export const getStringRating = (filmsQuantity) => {
+const getStringRating = (filmsQuantity) => {
   for (const [key, value] of ratings) {
     if (filmsQuantity <= +key) {
       return value;
@@ -15,3 +15,5 @@ export const getStringRating = (filmsQuantity) => {
 
   return ``;
 };
+
+export {getStringRating};

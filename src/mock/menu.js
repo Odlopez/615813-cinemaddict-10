@@ -20,7 +20,7 @@ const countsFilmAsCategory = (filmsData, category) => {
  * @param {Array} filmsData массив с данными карточек фильмов
  * @return {Object}
  */
-export const getFiltersData = (filmsData) => {
+const getFiltersData = (filmsData) => {
   const filtersData = {};
 
   for (const value of filterItems) {
@@ -29,3 +29,5 @@ export const getFiltersData = (filmsData) => {
 
   return filtersData;
 };
+
+export {getFiltersData};

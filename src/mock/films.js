@@ -1,7 +1,7 @@
 import {filmNames, posters, descriptionFish, genres} from '../constants';
 import {getRandomNumber, getRandomItem, sortFisherYates} from '../utils';
 
-const filmNamesArray = sortFisherYates(filmNames, true);
+const cloneFilmNames = sortFisherYates(filmNames, true);
 const descriptionSentences = descriptionFish.split(`\n`);
 
 /**
@@ -53,9 +53,9 @@ const getRandomDate = () => new Date(getRandomNumber(2019, 1930), getRandomNumbe
  *
  * @return {Object}
  */
-export const getFilmDataObject = () => {
+const getFilmDataObject = () => {
   return {
-    name: filmNamesArray.pop(),
+    name: cloneFilmNames.pop(),
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
@@ -73,3 +73,5 @@ export const getFilmDataObject = () => {
     favorites: !!getRandomNumber(1)
   };
 };
+
+export {getFilmDataObject};

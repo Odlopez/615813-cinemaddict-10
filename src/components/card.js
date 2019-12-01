@@ -18,21 +18,21 @@ const cropDescription = (description) => {
 /**
  * Генерирует разметку карточки фильма в зависимсоти от переданных данных
  *
- * @param {Object} data объект с данными фильма
+ * @param {Object} film объект с данными фильма
  * @return {String} строковое представление разметки карточки фильма
  */
-const getCardComponent = (data) => `
+const getCardComponent = (film) => `
   <article class="film-card">
-    <h3 class="film-card__title">${data.name}</h3>
-    <p class="film-card__rating">${data.rating}</p>
+    <h3 class="film-card__title">${film.name}</h3>
+    <p class="film-card__rating">${film.rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${new Date(data.date).getFullYear()}</span>
-      <span class="film-card__duration">${transformFilmDuration(data.duration)}</span>
-      <span class="film-card__genre">${data.genres[0]}</span>
+      <span class="film-card__year">${new Date(film.date).getFullYear()}</span>
+      <span class="film-card__duration">${transformFilmDuration(film.duration)}</span>
+      <span class="film-card__genre">${film.genres[0]}</span>
     </p>
-    <img src="images/posters/${data.poster}" alt="Постер ${data.name}" class="film-card__poster">
-    <p class="film-card__description">${cropDescription(data.description)}</p>
-    <a class="film-card__comments">${data.comments.length} comments</a>
+    <img src="images/posters/${film.poster}" alt="Постер ${film.name}" class="film-card__poster">
+    <p class="film-card__description">${cropDescription(film.description)}</p>
+    <a class="film-card__comments">${film.comments.length} comments</a>
     <form class="film-card__controls">
       <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
       <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
@@ -47,4 +47,6 @@ const getCardComponent = (data) => `
  * @param {Array} cardsData массив с данными карточек
  * @return {String} строкове представление разметки массива карточек фильмов
  */
-export const fillCardsMarkup = (cardsData) => cardsData.map((item) => getCardComponent(item)).join(``);
+const fillCardsMarkup = (cardsData) => cardsData.map((item) => getCardComponent(item)).join(``);
+
+export {fillCardsMarkup};

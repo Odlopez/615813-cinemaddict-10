@@ -7,7 +7,7 @@ import {monthNames} from './constants';
  * @param {Number} min минимальная граница диапазона
  * @return {Number} сгенерированное случайное число
  */
-export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
+const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
 
 /**
  * Возврщает случайный элемент массива
@@ -15,7 +15,7 @@ export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() 
  * @param {*} array массив, из которого необходимо извлечь случайный элемент
  * @return {any} случайный элемент массива
  */
-export const getRandomItem = (array) => array[getRandomNumber(array.length - 1)];
+const getRandomItem = (array) => array[getRandomNumber(array.length - 1)];
 
 /**
  * Производит "тасование" массива по методу Фишера-Йетса
@@ -24,7 +24,7 @@ export const getRandomItem = (array) => array[getRandomNumber(array.length - 1)]
  * @param {Boolean} isGetNewArray флаг, указывающий создавать ли новый массив или сортировать исходный
  * @return {Array} перетасованный массив
  */
-export const sortFisherYates = (arr, isGetNewArray) => {
+const sortFisherYates = (arr, isGetNewArray) => {
   if (isGetNewArray) {
     arr = arr.slice();
   }
@@ -44,7 +44,7 @@ export const sortFisherYates = (arr, isGetNewArray) => {
  * @param {String} name имя свойство, по которому происходит сортировка
  * @return {Array} отсортированный по переданному свойству массив с данными карточек фильмов
  */
-export const sortDataFilmsArray = (dataFilmsArray, name) => {
+const sortDataFilmsArray = (dataFilmsArray, name) => {
   let callback;
 
   switch (name) {
@@ -65,7 +65,7 @@ export const sortDataFilmsArray = (dataFilmsArray, name) => {
  * @param {String} markup строковое представление разметки, которую вставляем
  * @param {String} position позиция, в которою будет вставлена разметка
  */
-export const renderElement = (container, markup, position = `beforeend`) => {
+const renderElement = (container, markup, position = `beforeend`) => {
   container.insertAdjacentHTML(position, markup);
 };
 
@@ -75,7 +75,7 @@ export const renderElement = (container, markup, position = `beforeend`) => {
  * @param {Number} duration длительность фильма в минутах
  * @return {String} строка с продожительностью фильма вида {x}h {y}m
  */
-export const transformFilmDuration = (duration) => {
+const transformFilmDuration = (duration) => {
   const hours = Math.floor(duration / 60);
   const minutes = duration - hours * 60;
 
@@ -88,8 +88,10 @@ export const transformFilmDuration = (duration) => {
  * @param {Number} dateTime дата в миллисекундах
  * @return {String} дата вида DD Mont-name YYY
  */
-export const getDateString = (dateTime) => {
+const getDateString = (dateTime) => {
   const date = new Date(dateTime);
 
   return `${date.getDay()}  ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 };
+
+export {getRandomNumber, getRandomItem, sortFisherYates, sortDataFilmsArray, renderElement, transformFilmDuration, getDateString};
