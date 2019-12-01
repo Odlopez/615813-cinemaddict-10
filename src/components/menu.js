@@ -14,6 +14,7 @@ const getItemFilterMarkup = (name, quantity) => `
   <span class="main-navigation__item-count">${quantity}</span></a>
 `;
 
+
 /**
  * Генерирует разметку пунктов фильтра с количеством фильмов соответствующих категориям
  *

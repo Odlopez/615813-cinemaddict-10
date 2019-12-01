@@ -4,6 +4,7 @@ import {getSortMarkup} from './components/sort';
 import {renderFilms} from './components/render-cards';
 import {getBlockFilmsMarkup} from './components/content';
 import {renderFooterStatistic} from './footer';
+import {filterInit} from './filter';
 import {getRandomNumber, renderElement} from './utils';
 import {filmNames} from './constants';
 
@@ -27,3 +28,4 @@ const drawIndexMarkup = () => {
 drawIndexMarkup();
 renderFilms(filmsData);
 renderFooterStatistic(filmsData);
+filterInit(filmsData);

@@ -59,6 +59,17 @@ const onReadMoreButtonClick = (evt) => {
 };
 
 /**
+ * Удаляет обработчик клика кнопки Show More, если она была раньше в разметке
+ */
+const removeListenerOldReadMoreButton = () => {
+  const readMoreButton = document.querySelector(`.films-list__show-more`);
+
+  if (readMoreButton) {
+    readMoreButton.removeEventListener(`click`, onReadMoreButtonClick);
+  }
+};
+
+/**
  * Рендерит на страницу основной блок с фильмами
  *
  * @param {Array} filmsData массив с данными карточек фильмов
@@ -69,9 +80,9 @@ export const renderFilms = (filmsData) => {
   filmsSection.innerHTML = ``;
   countCards = 0;
   films = filmsData;
+  removeListenerOldReadMoreButton();
 
   renderElement(filmsSection, getFilmsListMarkup());
-
   renderPortionOfCards(filmsData);
 
   if (filmsData.length > CARD_QUANTITY) {
