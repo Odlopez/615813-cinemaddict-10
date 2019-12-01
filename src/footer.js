@@ -4,4 +4,4 @@ const renderFooterStatistic = (filmsData) => {
   footerStatistic.textContent = `${filmsData.length} movies inside`;
 };
 
-export  {renderFooterStatistic};
+export {renderFooterStatistic};
