@@ -5,7 +5,7 @@
  * @param {Number} min минимальная граница диапазона
  * @return {Number} сгенерированное случайное число
  */
-export const getRandomNumber = (max, min = 0) => min + Math.round(Math.random() * (max - min));
+export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
 
 /**
  * Возврщает случайный элемент массива
@@ -42,4 +42,27 @@ export const sortFisherYates = (arr, isGetNewArray) => {
  * @param {String} name имя свойство, по которому происходит сортировка
  * @return {Array} отсортированный по переданному свойству массив с данными карточек фильмов
  */
-export const sortDataFilmsArray = (dataFilmsArray, name) => dataFilmsArray.slice(0).sort((a, b) => b[name] - a[name]);
+export const sortDataFilmsArray = (dataFilmsArray, name) => {
+  let callback;
+
+  switch (name) {
+    case `comments`:
+      callback = (a, b) => b[name].length - a[name].length;
+      break;
+    default:
+      callback = (a, b) => b[name] - a[name];
+  }
+
+  return dataFilmsArray.slice(0).sort(callback);
+};
+
+/**
+ * Отрисовывает разметку в указанном месте
+ *
+ * @param {Node} container элемент, относительно которого добавляется разметка
+ * @param {String} markup строковое представление разметки, которую вставляем
+ * @param {String} position позиция, в которою будет вставлена разметка
+ */
+export const renderElement = (container, markup, position = `beforeend`) => {
+  container.insertAdjacentHTML(position, markup);
+};

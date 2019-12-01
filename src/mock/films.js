@@ -31,6 +31,30 @@ const getMockDescription = () => {
 };
 
 /**
+ * Генерирует массив жанров киноленты
+ *
+ * @return {Array} случайный массив с жанрами
+ */
+const getRandomGenresArray = () => {
+  const quantityGenres = getRandomNumber(genres.length, 1);
+
+  return sortFisherYates(genres, true).slice(0, quantityGenres);
+};
+
+/**
+ * Генерирует массив комментариев
+ *
+ * @return {Array} случайный массив с комментариями
+ */
+const getRandomCommentsArray = () => {
+  const quantityComments = getRandomNumber(50);
+
+  return new Array(quantityComments)
+  .fill(``)
+  .map(() => descriptionFish.substr(getRandomNumber(40), 25));
+};
+
+/**
  * Генерирует объект с моковыми данными для карточки фильма
  *
  * @return {Object}
@@ -42,9 +66,10 @@ export const getFilmDataObject = () => {
     rating: getRandomNumber(100, 10) / 10,
     year: getRandomNumber(2019, 1930),
     duration: transformFilmDuration(getRandomNumber(300, 15)),
-    genre: getRandomItem(genres),
+    genre: getRandomGenresArray(),
     description: getMockDescription(),
-    comments: getRandomNumber(50),
+    comments: getRandomCommentsArray(),
+    age: getRandomNumber(18),
     watchlist: !!getRandomNumber(1),
     history: !!getRandomNumber(1),
     favorites: !!getRandomNumber(1)

@@ -53,3 +53,4 @@ export const genres = [
   `Comedy`,
   `Cartoon`
 ];
+export const MAX_LENGTH_DESCRIPTION = 139;
