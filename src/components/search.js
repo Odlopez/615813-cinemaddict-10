@@ -1,4 +1,4 @@
-export const getSearchMarkup = () => `
+const getSearchMarkup = () => `
   <form class="header__search search">
     <input type="text" name="search" class="search__field" placeholder="Search movies" value="popeye">
     <svg fill="#7171D8" class="search__film-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="19" viewBox="0 0 20 19">
@@ -8,3 +8,5 @@ export const getSearchMarkup = () => `
     <button class="search__reset" type="reset">Reset</button>
   </form>
 `;
+
+export {getSearchMarkup};

@@ -1,5 +1,16 @@
-export const getFilmDetailsMarkup = () => `
-  <section class="film-details" style="display: none;">
+import {transformFilmDuration, getDateString, renderElement} from '../utils';
+import {ESC_KEYCODE} from '../constants';
+
+const main = document.querySelector(`.main`);
+
+/**
+ * Генерирует разметку равернутой карточки фильма в зависимсоти от переданных данных
+ *
+ * @param {Object} film объект с данными фильма
+ * @return {String} строковое представление разметки развернутой карточки фильма
+ */
+const getFilmDetailsMarkup = (film) => `
+  <section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -7,59 +18,57 @@ export const getFilmDetailsMarkup = () => `
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+            <img class="film-details__poster-img" src="images/posters/${film.poster}" alt="">
 
-            <p class="film-details__age">18+</p>
+            <p class="film-details__age">${film.age}+</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">The Great Flamarion</h3>
-                <p class="film-details__title-original">Original: The Great Flamarion</p>
+                <h3 class="film-details__title">${film.name}</h3>
+                <p class="film-details__title-original">Original: ${film.name}</p>
               </div>
 
               <div class="film-details__rating">
-                <p class="film-details__total-rating">8.9</p>
+                <p class="film-details__total-rating">${film.rating}</p>
               </div>
             </div>
 
             <table class="film-details__table">
               <tbody><tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">Anthony Mann</td>
+                <td class="film-details__cell">${film.director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+                <td class="film-details__cell">${film.writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+                <td class="film-details__cell">${film.actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">30 March 1945</td>
+                <td class="film-details__cell">${getDateString(film.date)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">1h 18m</td>
+                <td class="film-details__cell">${transformFilmDuration(film.duration)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">USA</td>
+                <td class="film-details__cell">${film.country}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre">Drama</span>
-                  <span class="film-details__genre">Film-Noir</span>
-                  <span class="film-details__genre">Mystery</span></td>
+                  ${film.genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
               </tr>
             </tbody></table>
 
             <p class="film-details__film-description">
-              The film opens following a murder at a cabaret in Mexico City in 1936, and then presents the events leading up to it in flashback. The Great Flamarion (Erich von Stroheim) is an arrogant, friendless, and misogynous marksman who displays his trick gunshot act in the vaudeville circuit. His show features a beautiful assistant, Connie (Mary Beth Hughes) and her drunken husband Al (Dan Duryea), Flamarion's other assistant. Flamarion falls in love with Connie, the movie's femme fatale, and is soon manipulated by her into killing her no good husband during one of their acts.
+              ${film.description}
             </p>
           </div>
         </div>
@@ -169,3 +178,51 @@ export const getFilmDetailsMarkup = () => `
     </form>
   </section>
 `;
+
+
+/**
+ * Функция-callback для обработчика нажатия на клавиатуру
+ * закрывакт попап фильма при нажатии на esc
+ *
+ * @param {Event} evt
+ */
+const onDocumentKeydown = (evt) => {
+  evt.preventDefault();
+
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+/**
+ * Закрывает открытый попап фильма, снимает обработчики
+ */
+const closePopup = () => {
+  const popup = document.querySelector(`.film-details`);
+  const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
+
+  popupCloseButton.removeEventListener(`click`, onPopupCloseButtonClick);
+  document.removeEventListener(`keydown`, onDocumentKeydown);
+
+  popup.remove();
+};
+
+/**
+ * Функция-callback для обработчика клика по кнопке закрытия попапа
+ * закрывает открытый попап фильма
+ */
+const onPopupCloseButtonClick = () => {
+  closePopup();
+};
+
+const renderPopupComponent = (film) => {
+  renderElement(main, getFilmDetailsMarkup(film));
+
+  const popup = document.querySelector(`.film-details`);
+  const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
+
+  popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
+  document.addEventListener(`keydown`, onDocumentKeydown);
+};
+
+export {renderPopupComponent};
