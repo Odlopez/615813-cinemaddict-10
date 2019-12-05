@@ -15,7 +15,7 @@ export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() 
  * @param {*} array массив, из которого необходимо извлечь случайный элемент
  * @return {any} случайный элемент массива
  */
-export const getRandomItem = (array) => array[getRandomNumber(array.length - 1)];
+export const getRandomElement = (array) => array[getRandomNumber(array.length - 1)];
 
 /**
  * Производит "тасование" массива по методу Фишера-Йетса
@@ -40,22 +40,22 @@ export const sortFisherYates = (arr, isGetNewArray) => {
 /**
  * Сортирует по убыванию переданный массив по заданному свойству
  *
- * @param {Array} dataFilmsArray массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  * @param {String} name имя свойство, по которому происходит сортировка
  * @return {Array} отсортированный по переданному свойству массив с данными карточек фильмов
  */
-export const sortDataFilmsArray = (dataFilmsArray, name) => {
-  let callback;
+export const sortFilms = (films, name) => {
+  let sorter;
 
   switch (name) {
     case `comments`:
-      callback = (a, b) => b[name].length - a[name].length;
+      sorter = (a, b) => b[name].length - a[name].length;
       break;
     default:
-      callback = (a, b) => b[name] - a[name];
+      sorter = (a, b) => b[name] - a[name];
   }
 
-  return dataFilmsArray.slice(0).sort(callback);
+  return films.slice(0).sort(sorter);
 };
 
 /**

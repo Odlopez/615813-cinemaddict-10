@@ -9,9 +9,9 @@ import {filterInit} from './filter';
 import {getRandomNumber, renderElement} from './utils';
 import {filmNames} from './constants';
 
-import {getFilmDataObject} from './mock/films';
+import {getFilms} from './mock/films';
 
-const filmsData = new Array(filmNames.length).fill(``).map(getFilmDataObject);
+const films = new Array(filmNames.length).fill(``).map(getFilms);
 
 const userWatchedFilmsQuantity = getRandomNumber(30);
 
@@ -20,13 +20,13 @@ const main = document.querySelector(`.main`);
 
 const drawIndexMarkup = () => {
   renderElement(header, getProfileComponent(userWatchedFilmsQuantity));
-  renderElement(main, getMenuComponent(filmsData));
+  renderElement(main, getMenuComponent(films));
   renderElement(main, getSortMarkup());
   renderElement(main, getBlockFilmsMarkup());
 };
 
 drawIndexMarkup();
-renderFilms(filmsData);
-renderFooterStatistic(filmsData);
-filterInit(filmsData);
-renderPopupComponent(filmsData[0]);
+renderFilms(films);
+renderFooterStatistic(films);
+filterInit(films);
+renderPopupComponent(films[0]);

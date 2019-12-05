@@ -15,7 +15,7 @@ import {filmNames,
   MIN_YEAR,
   MAX_QUANTUTY_MONTHS,
   MAX_QUANTITY_DAYS} from '../constants';
-import {getRandomNumber, getRandomItem, sortFisherYates} from '../utils';
+import {getRandomNumber, getRandomElement, sortFisherYates} from '../utils';
 
 const cloneFilmNames = sortFisherYates(filmNames, true);
 const descriptionSentences = descriptionFish.split(`\n`);
@@ -38,7 +38,7 @@ const getMockDescription = () => {
  *
  * @return {Array} случайный массив с жанрами
  */
-const getRandomGenresArray = () => {
+const getRandomGenres = () => {
   const quantityGenres = getRandomNumber(genres.length, MIN_QUANTITY_GENRES);
 
   return sortFisherYates(genres, true).slice(0, quantityGenres);
@@ -49,7 +49,7 @@ const getRandomGenresArray = () => {
  *
  * @return {Array} случайный массив с комментариями
  */
-const getRandomCommentsArray = () => {
+const getRandomComments = () => {
   const quantityComments = getRandomNumber(MAX_QUANTITY_COMMENTS);
 
   return new Array(quantityComments)
@@ -69,20 +69,20 @@ const getRandomDate = () => new Date(getRandomNumber(MAX_YEAR, MIN_YEAR), getRan
  *
  * @return {Object}
  */
-export const getFilmDataObject = () => {
+export const getFilms = () => {
   return {
     name: cloneFilmNames.pop(),
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
     country: `Uganda`,
-    poster: getRandomItem(posters),
+    poster: getRandomElement(posters),
     rating: (getRandomNumber(MAX_RATING * 10, 10) / 10).toFixed(1),
     date: getRandomDate(),
     duration: getRandomNumber(MAX_FILM_DURATION, MIN_FILM_DURATION),
-    genres: getRandomGenresArray(),
+    genres: getRandomGenres(),
     description: getMockDescription(),
-    comments: getRandomCommentsArray(),
+    comments: getRandomComments(),
     age: getRandomNumber(MAX_AGE),
     watchlist: !!getRandomNumber(1),
     history: !!getRandomNumber(1),

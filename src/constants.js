@@ -13,7 +13,7 @@ export const extraListsOptions = {
   commentedTitle: `Most commented`,
   commentedProperty: `comments`,
 };
-export const filterItems = [`Watchlist`, `History`, `Favorites`];
+export const filterNames = [`Watchlist`, `History`, `Favorites`];
 export const filmNames = [
   `Пятый Элемент`,
   `Властелин Колец`,

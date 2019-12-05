@@ -1,14 +1,14 @@
-import {filterItems} from '../constants';
+import {filterNames} from '../constants';
 
 /**
  * Подсчитывает в массиве данных количество фильмов, соответствующих заданной категории
  *
- * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  * @param {String} category категория, по которой фильтруем данные фильмов
  * @return {Number} количество фильмов соответстующей категории
  */
-const countsFilmAsCategory = (filmsData, category) => {
-  return filmsData.reduce((hoarder, item) => {
+const countsFilmAsCategory = (films, category) => {
+  return films.reduce((hoarder, item) => {
     hoarder += item[category] ? 1 : 0;
     return hoarder;
   }, 0);
@@ -17,15 +17,15 @@ const countsFilmAsCategory = (filmsData, category) => {
 /**
  * Генерирует данные для пунктов меню фильтра
  *
- * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  * @return {Object}
  */
-export const getFiltersData = (filmsData) => {
-  const filtersData = {};
+export const getFilters = (films) => {
+  const filters = {};
 
-  for (const value of filterItems) {
-    filtersData[value] = countsFilmAsCategory(filmsData, value.toLowerCase());
+  for (const value of filterNames) {
+    filters[value] = countsFilmAsCategory(films, value.toLowerCase());
   }
 
-  return filtersData;
+  return filters;
 };

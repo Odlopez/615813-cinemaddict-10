@@ -7,39 +7,39 @@ import {renderElement} from '../utils';
 
 const {ratedTitle, ratedProperty, commentedTitle, commentedProperty} = extraListsOptions;
 let countCards = 0;
-let films = null;
+let filmsCopy = null;
 
 /**
  * Генерирует разметку блока Top rated
  *
- * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  * @return {String} строковое представление разметки блока Top rated
  */
-const getRatedExtraListMarkup = (filmsData) => getFilmsExtraListComponent(ratedTitle, ratedProperty, filmsData);
+const getRatedExtraListMarkup = (films) => getFilmsExtraListComponent(ratedTitle, ratedProperty, films);
 
 /**
  * Генерирует разметку блока Most commented
  *
- * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  * @return {String} строковое представление разметки блока Most commented
  */
-const getCommentedExtraListMarkup = (filmsData) => getFilmsExtraListComponent(commentedTitle, commentedProperty, filmsData);
+const getCommentedExtraListMarkup = (films) => getFilmsExtraListComponent(commentedTitle, commentedProperty, films);
 
 /**
  * Рендерит на страницу порцию карточек
  *
- * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  */
-const renderPortionOfCards = (filmsData) => {
+const renderPortionOfCards = (films) => {
   const filmsListContainer = document.querySelector(`.films-list__container`);
 
   if (!filmsListContainer) {
     return;
   }
 
-  const portionFilmsdata = filmsData.slice(countCards, countCards + CARD_QUANTITY);
+  const portionfilms = films.slice(countCards, countCards + CARD_QUANTITY);
 
-  renderElement(filmsListContainer, fillCardsMarkup(portionFilmsdata));
+  renderElement(filmsListContainer, fillCardsMarkup(portionfilms));
 
   countCards += CARD_QUANTITY;
 };
@@ -50,9 +50,9 @@ const renderPortionOfCards = (filmsData) => {
  * @param {Event} evt
  */
 const onReadMoreButtonClick = (evt) => {
-  renderPortionOfCards(films);
+  renderPortionOfCards(filmsCopy);
 
-  if (countCards >= films.length) {
+  if (countCards >= filmsCopy.length) {
     evt.currentTarget.removeEventListener(`click`, onReadMoreButtonClick);
     evt.currentTarget.remove();
   }
@@ -72,26 +72,26 @@ const removeListenerOldReadMoreButton = () => {
 /**
  * Рендерит на страницу основной блок с фильмами
  *
- * @param {Array} filmsData массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  */
-export const renderFilms = (filmsData) => {
+export const renderFilms = (films) => {
   const filmsSection = document.querySelector(`.films`);
 
   filmsSection.innerHTML = ``;
   countCards = 0;
-  films = filmsData;
+  filmsCopy = films;
   removeListenerOldReadMoreButton();
 
   renderElement(filmsSection, getFilmsListMarkup());
-  renderPortionOfCards(filmsData);
+  renderPortionOfCards(films);
 
-  if (filmsData.length > CARD_QUANTITY) {
+  if (films.length > CARD_QUANTITY) {
     renderElement(filmsSection, getReadMoreButtonMarkup());
 
     const readMoreButton = filmsSection.querySelector(`.films-list__show-more`);
     readMoreButton.addEventListener(`click`, onReadMoreButtonClick);
   }
 
-  renderElement(filmsSection, getRatedExtraListMarkup(filmsData));
-  renderElement(filmsSection, getCommentedExtraListMarkup(filmsData));
+  renderElement(filmsSection, getRatedExtraListMarkup(films));
+  renderElement(filmsSection, getCommentedExtraListMarkup(films));
 };

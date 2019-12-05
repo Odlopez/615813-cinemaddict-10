@@ -1,37 +1,37 @@
 import {fillCardsMarkup} from './card';
-import {sortDataFilmsArray, sortFisherYates} from '../utils';
+import {sortFilms, sortFisherYates} from '../utils';
 import {EXTRA_CARD_QUANTITY} from '../constants';
 
 /**
  * Проверяет массив с данными карточек на присутствие хотя бы одного объекта с ненулевым показателем, заданным вторым аргументом
  *
- * @param {Array} filmsData массив объектов с данными о фильмах в пунктах фильтра
+ * @param {Array} films массив объектов с данными о фильмах в пунктах фильтра
  * @param {String} sortProperty имя свойства, по которому идет проверка массива с данными
  * @return {Boolean}
  */
-const isNotIndex = (filmsData, sortProperty) => !filmsData.filter((item) => item[sortProperty]).length;
+const isNotIndex = (films, sortProperty) => !films.filter((item) => item[sortProperty]).length;
 
 /**
  * Проверяет массив с данными карточек фильмов на одинаковость показателя, заданного во втором аргументе
  *
- * @param {Array} filmsData массив объектов с данными о фильмах в пунктах фильтра
+ * @param {Array} films массив объектов с данными о фильмах в пунктах фильтра
  * @param {String} sortProperty имя свойства, по которому идет проверка массива с данными
  * @return {Boolean}
  */
-const isEqualRating = (filmsData, sortProperty) => filmsData.every((item, i, arr) => item[sortProperty] === (arr[i + 1] ? arr[i + 1][sortProperty] : item[sortProperty]));
+const isEqualRating = (films, sortProperty) => films.every((item, i, arr) => item[sortProperty] === (arr[i + 1] ? arr[i + 1][sortProperty] : item[sortProperty]));
 
 /**
  *
  * @param {String} title заголовок компонента extra-list
- * @param {Array} cardsData массив с данными
+ * @param {Array} cards массив с данными
  * @return {String}
  */
-const getFilmsExtraListMarkup = (title, cardsData) => `
+const getFilmsExtraListMarkup = (title, cards) => `
   <section class="films-list--extra">
     <h2 class="films-list__title">${title}</h2>
 
     <div class="films-list__container">
-      ${fillCardsMarkup(cardsData)}
+      ${fillCardsMarkup(cards)}
     </div>
   </section>
 `;
@@ -41,19 +41,19 @@ const getFilmsExtraListMarkup = (title, cardsData) => `
   *
   * @param {*} title заголовок компонента
   * @param {*} sortProperty имя свойства, по которому сортируются карточки фильмов
-  * @param {Array} filmsData массив с данными карточек фильмов
+  * @param {Array} films массив с данными карточек фильмов
   * @return {String} строкове представление разметки компонента extra-list
   */
-export const getFilmsExtraListComponent = (title, sortProperty, filmsData) => {
-  if (isNotIndex(filmsData, sortProperty)) {
+export const getFilmsExtraListComponent = (title, sortProperty, films) => {
+  if (isNotIndex(films, sortProperty)) {
     return ``;
   }
 
-  if (isEqualRating(filmsData, sortProperty)) {
-    filmsData = sortFisherYates(filmsData, true).slice(0, EXTRA_CARD_QUANTITY);
+  if (isEqualRating(films, sortProperty)) {
+    films = sortFisherYates(films, true).slice(0, EXTRA_CARD_QUANTITY);
   } else {
-    filmsData = sortDataFilmsArray(filmsData, sortProperty).slice(0, EXTRA_CARD_QUANTITY);
+    films = sortFilms(films, sortProperty).slice(0, EXTRA_CARD_QUANTITY);
   }
 
-  return getFilmsExtraListMarkup(title, filmsData);
+  return getFilmsExtraListMarkup(title, films);
 };
