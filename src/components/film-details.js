@@ -215,7 +215,7 @@ const onPopupCloseButtonClick = () => {
   closePopup();
 };
 
-const renderPopupComponent = (film) => {
+export const renderPopupComponent = (film) => {
   renderElement(main, getFilmDetailsMarkup(film));
 
   const popup = document.querySelector(`.film-details`);
@@ -224,5 +224,3 @@ const renderPopupComponent = (film) => {
   popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
   document.addEventListener(`keydown`, onDocumentKeydown);
 };
-
-export {renderPopupComponent};

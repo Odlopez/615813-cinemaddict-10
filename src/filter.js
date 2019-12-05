@@ -45,11 +45,9 @@ const onFilterLinkClick = (evt) => {
  *
  * @param {Array} filmsData массив с данными карточек фильмов
  */
-const filterInit = (filmsData) => {
+export const filterInit = (filmsData) => {
   films = filmsData;
   filterLinks = Array.from(document.querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`));
 
   filterLinks.forEach((item) => item.addEventListener(`click`, onFilterLinkClick));
 };
-
-export {filterInit};

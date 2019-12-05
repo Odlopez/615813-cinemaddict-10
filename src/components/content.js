@@ -3,9 +3,7 @@
  *
  * @return {String} строкове представление разметки блока фильмов
  */
-const getBlockFilmsMarkup = () => `
+export const getBlockFilmsMarkup = () => `
   <section class="films">
    </section>
 `;
-
-export {getBlockFilmsMarkup};

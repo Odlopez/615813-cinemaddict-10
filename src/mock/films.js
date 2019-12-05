@@ -10,7 +10,11 @@ import {filmNames,
   MAX_FILM_DURATION,
   MIN_FILM_DURATION,
   MAX_RATING,
-  MAX_AGE} from '../constants';
+  MAX_AGE,
+  MAX_YEAR,
+  MIN_YEAR,
+  MAX_QUANTUTY_MONTHS,
+  MAX_QUANTITY_DAYS} from '../constants';
 import {getRandomNumber, getRandomItem, sortFisherYates} from '../utils';
 
 const cloneFilmNames = sortFisherYates(filmNames, true);
@@ -58,14 +62,14 @@ const getRandomCommentsArray = () => {
  *
  * @return {Number} случаная дата в миллисекундах
  */
-const getRandomDate = () => new Date(getRandomNumber(2019, 1930), getRandomNumber(0, 11), getRandomNumber(0, 31)).getTime();
+const getRandomDate = () => new Date(getRandomNumber(MAX_YEAR, MIN_YEAR), getRandomNumber(0, MAX_QUANTUTY_MONTHS), getRandomNumber(1, MAX_QUANTITY_DAYS)).getTime();
 
 /**
  * Генерирует объект с моковыми данными для карточки фильма
  *
  * @return {Object}
  */
-const getFilmDataObject = () => {
+export const getFilmDataObject = () => {
   return {
     name: cloneFilmNames.pop(),
     director: `Anthony Mann`,
@@ -85,5 +89,3 @@ const getFilmDataObject = () => {
     favorites: !!getRandomNumber(1)
   };
 };
-
-export {getFilmDataObject};

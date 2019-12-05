@@ -29,12 +29,10 @@ const getFiltersMarkup = (filtersData) => filterItems.map((item) => getItemFilte
  * @param {Array} filmsData массив с данными карточек фильмов
  * @return {String} возвращщает разметку компонента меню
  */
-const getMenuComponent = (filmsData) => `
+export const getMenuComponent = (filmsData) => `
   <nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
     ${getFiltersMarkup(getFiltersData(filmsData))}
     <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
   </nav>
 `;
-
-export {getMenuComponent};

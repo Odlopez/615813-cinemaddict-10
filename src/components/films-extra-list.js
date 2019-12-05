@@ -44,7 +44,7 @@ const getFilmsExtraListMarkup = (title, cardsData) => `
   * @param {Array} filmsData массив с данными карточек фильмов
   * @return {String} строкове представление разметки компонента extra-list
   */
-const getFilmsExtraListComponent = (title, sortProperty, filmsData) => {
+export const getFilmsExtraListComponent = (title, sortProperty, filmsData) => {
   if (isNotIndex(filmsData, sortProperty)) {
     return ``;
   }
@@ -57,5 +57,3 @@ const getFilmsExtraListComponent = (title, sortProperty, filmsData) => {
 
   return getFilmsExtraListMarkup(title, filmsData);
 };
-
-export {getFilmsExtraListComponent};

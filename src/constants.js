@@ -80,3 +80,7 @@ export const MAX_FILM_DURATION = 300;
 export const MIN_FILM_DURATION = 15;
 export const MAX_RATING = 10;
 export const MAX_AGE = 18;
+export const MAX_YEAR = 2019;
+export const MIN_YEAR = 1930;
+export const MAX_QUANTUTY_MONTHS = 11;
+export const MAX_QUANTITY_DAYS = 31;

@@ -74,7 +74,7 @@ const removeListenerOldReadMoreButton = () => {
  *
  * @param {Array} filmsData массив с данными карточек фильмов
  */
-const renderFilms = (filmsData) => {
+export const renderFilms = (filmsData) => {
   const filmsSection = document.querySelector(`.films`);
 
   filmsSection.innerHTML = ``;
@@ -95,5 +95,3 @@ const renderFilms = (filmsData) => {
   renderElement(filmsSection, getRatedExtraListMarkup(filmsData));
   renderElement(filmsSection, getCommentedExtraListMarkup(filmsData));
 };
-
-export {renderFilms};

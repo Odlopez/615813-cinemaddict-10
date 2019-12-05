@@ -47,6 +47,4 @@ const getCardComponent = (film) => `
  * @param {Array} cardsData массив с данными карточек
  * @return {String} строкове представление разметки массива карточек фильмов
  */
-const fillCardsMarkup = (cardsData) => cardsData.map((item) => getCardComponent(item)).join(``);
-
-export {fillCardsMarkup};
+export const fillCardsMarkup = (cardsData) => cardsData.map((item) => getCardComponent(item)).join(``);
