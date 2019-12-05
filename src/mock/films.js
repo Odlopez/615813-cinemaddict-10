@@ -1,4 +1,16 @@
-import {filmNames, posters, descriptionFish, genres} from '../constants';
+import {filmNames,
+  posters,
+  descriptionFish,
+  genres,
+  MAX_QUANTITY_SENTENCES,
+  MIN_QUANTITY_SENTENCES,
+  MIN_QUANTITY_GENRES,
+  MAX_QUANTITY_COMMENTS,
+  MAX_COMMENT_LENGTH,
+  MAX_FILM_DURATION,
+  MIN_FILM_DURATION,
+  MAX_RATING,
+  MAX_AGE} from '../constants';
 import {getRandomNumber, getRandomItem, sortFisherYates} from '../utils';
 
 const cloneFilmNames = sortFisherYates(filmNames, true);
@@ -10,7 +22,7 @@ const descriptionSentences = descriptionFish.split(`\n`);
  * @return {String} строка с описанием фильма
  */
 const getMockDescription = () => {
-  const sentencesQuantity = getRandomNumber(3, 1);
+  const sentencesQuantity = getRandomNumber(MAX_QUANTITY_SENTENCES, MIN_QUANTITY_SENTENCES);
 
   return sortFisherYates(descriptionSentences, true)
   .slice(0, sentencesQuantity)
@@ -23,7 +35,7 @@ const getMockDescription = () => {
  * @return {Array} случайный массив с жанрами
  */
 const getRandomGenresArray = () => {
-  const quantityGenres = getRandomNumber(genres.length, 1);
+  const quantityGenres = getRandomNumber(genres.length, MIN_QUANTITY_GENRES);
 
   return sortFisherYates(genres, true).slice(0, quantityGenres);
 };
@@ -34,11 +46,11 @@ const getRandomGenresArray = () => {
  * @return {Array} случайный массив с комментариями
  */
 const getRandomCommentsArray = () => {
-  const quantityComments = getRandomNumber(50);
+  const quantityComments = getRandomNumber(MAX_QUANTITY_COMMENTS);
 
   return new Array(quantityComments)
   .fill(``)
-  .map(() => descriptionFish.substr(getRandomNumber(40), 25));
+  .map(() => descriptionFish.substr(getRandomNumber(descriptionFish.length), MAX_COMMENT_LENGTH));
 };
 
 /**
@@ -61,13 +73,13 @@ const getFilmDataObject = () => {
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
     country: `Uganda`,
     poster: getRandomItem(posters),
-    rating: (getRandomNumber(100, 10) / 10).toFixed(1),
+    rating: (getRandomNumber(MAX_RATING * 10, 10) / 10).toFixed(1),
     date: getRandomDate(),
-    duration: getRandomNumber(300, 15),
+    duration: getRandomNumber(MAX_FILM_DURATION, MIN_FILM_DURATION),
     genres: getRandomGenresArray(),
     description: getMockDescription(),
     comments: getRandomCommentsArray(),
-    age: getRandomNumber(18),
+    age: getRandomNumber(MAX_AGE),
     watchlist: !!getRandomNumber(1),
     history: !!getRandomNumber(1),
     favorites: !!getRandomNumber(1)

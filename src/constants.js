@@ -6,6 +6,7 @@ export const ratings = new Map([
 ]);
 export const CARD_QUANTITY = 5;
 export const EXTRA_CARD_QUANTITY = 2;
+export const MINUTES_PER_HOUR = 60;
 export const extraListsOptions = {
   ratedTitle: `Top rated`,
   ratedProperty: `rating`,
@@ -69,3 +70,13 @@ export const monthNames = {
 };
 export const MAX_LENGTH_DESCRIPTION = 139;
 export const ESC_KEYCODE = 27;
+// mock
+export const MAX_QUANTITY_SENTENCES = 3;
+export const MIN_QUANTITY_SENTENCES = 1;
+export const MIN_QUANTITY_GENRES = 1;
+export const MAX_QUANTITY_COMMENTS = 50;
+export const MAX_COMMENT_LENGTH = 25;
+export const MAX_FILM_DURATION = 300;
+export const MIN_FILM_DURATION = 15;
+export const MAX_RATING = 10;
+export const MAX_AGE = 18;

@@ -1,4 +1,4 @@
-import {monthNames} from './constants';
+import {monthNames, MINUTES_PER_HOUR} from './constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -76,8 +76,8 @@ const renderElement = (container, markup, position = `beforeend`) => {
  * @return {String} строка с продожительностью фильма вида {x}h {y}m
  */
 const transformFilmDuration = (duration) => {
-  const hours = Math.floor(duration / 60);
-  const minutes = duration - hours * 60;
+  const hours = Math.floor(duration / MINUTES_PER_HOUR);
+  const minutes = duration - hours * MINUTES_PER_HOUR;
 
   return `${hours ? `${hours}h ` : ``}${minutes}m`;
 };
