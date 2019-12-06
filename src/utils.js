@@ -1,4 +1,4 @@
-import {monthNames} from './constants';
+import {monthNames, MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from './constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -7,7 +7,7 @@ import {monthNames} from './constants';
  * @param {Number} min минимальная граница диапазона
  * @return {Number} сгенерированное случайное число
  */
-const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
+export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
 
 /**
  * Возврщает случайный элемент массива
@@ -15,7 +15,7 @@ const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max 
  * @param {*} array массив, из которого необходимо извлечь случайный элемент
  * @return {any} случайный элемент массива
  */
-const getRandomItem = (array) => array[getRandomNumber(array.length - 1)];
+export const getRandomElement = (array) => array[getRandomNumber(array.length - 1)];
 
 /**
  * Производит "тасование" массива по методу Фишера-Йетса
@@ -24,7 +24,7 @@ const getRandomItem = (array) => array[getRandomNumber(array.length - 1)];
  * @param {Boolean} isGetNewArray флаг, указывающий создавать ли новый массив или сортировать исходный
  * @return {Array} перетасованный массив
  */
-const sortFisherYates = (arr, isGetNewArray) => {
+export const sortFisherYates = (arr, isGetNewArray) => {
   if (isGetNewArray) {
     arr = arr.slice();
   }
@@ -40,33 +40,33 @@ const sortFisherYates = (arr, isGetNewArray) => {
 /**
  * Сортирует по убыванию переданный массив по заданному свойству
  *
- * @param {Array} dataFilmsArray массив с данными карточек фильмов
+ * @param {Array} films массив с данными карточек фильмов
  * @param {String} name имя свойство, по которому происходит сортировка
  * @return {Array} отсортированный по переданному свойству массив с данными карточек фильмов
  */
-const sortDataFilmsArray = (dataFilmsArray, name) => {
-  let callback;
+export const sortFilms = (films, name) => {
+  let sorter;
 
   switch (name) {
     case `comments`:
-      callback = (a, b) => b[name].length - a[name].length;
+      sorter = (a, b) => b[name].length - a[name].length;
       break;
     default:
-      callback = (a, b) => b[name] - a[name];
+      sorter = (a, b) => b[name] - a[name];
   }
 
-  return dataFilmsArray.slice(0).sort(callback);
+  return films.slice(0).sort(sorter);
 };
 
 /**
  * Отрисовывает разметку в указанном месте
  *
  * @param {Node} container элемент, относительно которого добавляется разметка
- * @param {String} markup строковое представление разметки, которую вставляем
+ * @param {Node} element DOM-узел, который вставляем
  * @param {String} position позиция, в которою будет вставлена разметка
  */
-const renderElement = (container, markup, position = `beforeend`) => {
-  container.insertAdjacentHTML(position, markup);
+export const render = (container, element, position = `beforeend`) => {
+  container.insertAdjacentElement(position, element);
 };
 
 /**
@@ -75,9 +75,9 @@ const renderElement = (container, markup, position = `beforeend`) => {
  * @param {Number} duration длительность фильма в минутах
  * @return {String} строка с продожительностью фильма вида {x}h {y}m
  */
-const transformFilmDuration = (duration) => {
-  const hours = Math.floor(duration / 60);
-  const minutes = duration - hours * 60;
+export const transformFilmDuration = (duration) => {
+  const hours = Math.floor(duration / MINUTES_PER_HOUR);
+  const minutes = duration - hours * MINUTES_PER_HOUR;
 
   return `${hours ? `${hours}h ` : ``}${minutes}m`;
 };
@@ -88,10 +88,36 @@ const transformFilmDuration = (duration) => {
  * @param {Number} dateTime дата в миллисекундах
  * @return {String} дата вида DD Mont-name YYY
  */
-const getDateString = (dateTime) => {
+export const getDateString = (dateTime) => {
   const date = new Date(dateTime);
 
   return `${date.getDay()}  ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 };
 
-export {getRandomNumber, getRandomItem, sortFisherYates, sortDataFilmsArray, renderElement, transformFilmDuration, getDateString};
+/**
+ * Создает Node-элемент на основании переданной разметки
+ *
+ * @param {String} markup
+ * @return {Node} DOM-узел
+ */
+export const createElement = (markup) => {
+  const container = document.createElement(`div`);
+
+  container.innerHTML = markup;
+
+  return container.firstElementChild;
+};
+
+/**
+ * Обрезает строку с описанием фильма до допустимой длинны
+ *
+ * @param {String} description строка с описанием фильма
+ * @return {String} строка с описанием фильма допустимой длины
+ */
+export const cropDescription = (description) => {
+  if (description.length > MAX_LENGTH_DESCRIPTION) {
+    description = `${description.substr(0, MAX_LENGTH_DESCRIPTION)}...`;
+  }
+
+  return description;
+};

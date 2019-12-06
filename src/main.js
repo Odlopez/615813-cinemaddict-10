@@ -1,17 +1,14 @@
-import {getProfileComponent} from './components/profile';
-import {getMenuComponent} from './components/menu';
-import {getSortMarkup} from './components/sort';
-import {renderPopupComponent} from './components/film-details';
-import {renderFilms} from './components/render-cards';
-import {getBlockFilmsMarkup} from './components/content';
+import Profile from './components/profile';
+import Menu from './components/menu';
+import Sort from './components/sort';
+import ContentBlock from './components/content';
 import {renderFooterStatistic} from './footer';
-import {filterInit} from './filter';
-import {getRandomNumber, renderElement} from './utils';
+import {getRandomNumber, render} from './utils';
 import {filmNames} from './constants';
 
-import {getFilmDataObject} from './mock/films';
+import {getFilms} from './mock/films';
 
-const filmsData = new Array(filmNames.length).fill(``).map(getFilmDataObject);
+const films = new Array(filmNames.length).fill(``).map(getFilms);
 
 const userWatchedFilmsQuantity = getRandomNumber(30);
 
@@ -19,14 +16,14 @@ const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
 const drawIndexMarkup = () => {
-  renderElement(header, getProfileComponent(userWatchedFilmsQuantity));
-  renderElement(main, getMenuComponent(filmsData));
-  renderElement(main, getSortMarkup());
-  renderElement(main, getBlockFilmsMarkup());
+  const content = new ContentBlock();
+  content.films = films;
+
+  render(header, new Profile(userWatchedFilmsQuantity).getElement());
+  render(main, new Menu(films, content).getElement());
+  render(main, new Sort().getElement());
+  render(main, content.getElement());
 };
 
 drawIndexMarkup();
-renderFilms(filmsData);
-renderFooterStatistic(filmsData);
-filterInit(filmsData);
-renderPopupComponent(filmsData[0]);
+renderFooterStatistic(films);

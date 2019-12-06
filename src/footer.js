@@ -1,7 +1,5 @@
-const renderFooterStatistic = (filmsData) => {
+export const renderFooterStatistic = (films) => {
   const footerStatistic = document.querySelector(`.footer__statistics`);
 
-  footerStatistic.textContent = `${filmsData.length} movies inside`;
+  footerStatistic.textContent = `${films.length} movies inside`;
 };
-
-export {renderFooterStatistic};

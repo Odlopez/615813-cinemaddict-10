@@ -1,61 +1,60 @@
-import {fillCardsMarkup} from './card';
-import {sortDataFilmsArray, sortFisherYates} from '../utils';
-import {EXTRA_CARD_QUANTITY} from '../constants';
-
-/**
- * Проверяет массив с данными карточек на присутствие хотя бы одного объекта с ненулевым показателем, заданным вторым аргументом
- *
- * @param {Array} filmsData массив объектов с данными о фильмах в пунктах фильтра
- * @param {String} sortProperty имя свойства, по которому идет проверка массива с данными
- * @return {Boolean}
- */
-const isNotIndex = (filmsData, sortProperty) => !filmsData.filter((item) => item[sortProperty]).length;
-
-/**
- * Проверяет массив с данными карточек фильмов на одинаковость показателя, заданного во втором аргументе
- *
- * @param {Array} filmsData массив объектов с данными о фильмах в пунктах фильтра
- * @param {String} sortProperty имя свойства, по которому идет проверка массива с данными
- * @return {Boolean}
- */
-const isEqualRating = (filmsData, sortProperty) => filmsData.every((item, i, arr) => item[sortProperty] === (arr[i + 1] ? arr[i + 1][sortProperty] : item[sortProperty]));
+import {createElement} from '../utils';
 
 /**
  *
  * @param {String} title заголовок компонента extra-list
- * @param {Array} cardsData массив с данными
  * @return {String}
  */
-const getFilmsExtraListMarkup = (title, cardsData) => `
+const getFilmsExtraListMarkup = (title) => `
   <section class="films-list--extra">
     <h2 class="films-list__title">${title}</h2>
-
     <div class="films-list__container">
-      ${fillCardsMarkup(cardsData)}
     </div>
   </section>
 `;
 
-/**
-  * Генерирует разметку компонента "extra-list"
-  *
-  * @param {*} title заголовок компонента
-  * @param {*} sortProperty имя свойства, по которому сортируются карточки фильмов
-  * @param {Array} filmsData массив с данными карточек фильмов
-  * @return {String} строкове представление разметки компонента extra-list
-  */
-const getFilmsExtraListComponent = (title, sortProperty, filmsData) => {
-  if (isNotIndex(filmsData, sortProperty)) {
-    return ``;
+export default class FilmsExtraList {
+  constructor(title, films) {
+    this._element = null;
+    this._films = films;
+    this._title = title;
   }
 
-  if (isEqualRating(filmsData, sortProperty)) {
-    filmsData = sortFisherYates(filmsData, true).slice(0, EXTRA_CARD_QUANTITY);
-  } else {
-    filmsData = sortDataFilmsArray(filmsData, sortProperty).slice(0, EXTRA_CARD_QUANTITY);
+  /**
+   * Генерирует разметку дополнительного списка карточек фильмов
+   *
+   * @return {String} строкое представление разметки дополнительного списка фильмов
+   */
+  getTemplate() {
+    return getFilmsExtraListMarkup(this._title);
   }
 
-  return getFilmsExtraListMarkup(title, filmsData);
-};
+  /**
+   * Возвращает ссылку на node-элемент дополнительного списка фильмов
+   *
+   * @return {Node}
+   */
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
 
-export {getFilmsExtraListComponent};
+    return this._element;
+  }
+
+  /**
+   * Возвращает ссылку на node-элемент контейнера фильмов
+   *
+   * @return {Node}
+   */
+  getContainer() {
+    return this._container;
+  }
+
+  /**
+   * Очищает ссылку на node-элемент дополнительного списка фильмов
+   */
+  removeElement() {
+    this._element = null;
+  }
+}

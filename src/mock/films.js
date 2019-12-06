@@ -1,5 +1,21 @@
-import {filmNames, posters, descriptionFish, genres} from '../constants';
-import {getRandomNumber, getRandomItem, sortFisherYates} from '../utils';
+import {filmNames,
+  posters,
+  descriptionFish,
+  genres,
+  MAX_QUANTITY_SENTENCES,
+  MIN_QUANTITY_SENTENCES,
+  MIN_QUANTITY_GENRES,
+  MAX_QUANTITY_COMMENTS,
+  MAX_COMMENT_LENGTH,
+  MAX_FILM_DURATION,
+  MIN_FILM_DURATION,
+  MAX_RATING,
+  MAX_AGE,
+  MAX_YEAR,
+  MIN_YEAR,
+  MAX_QUANTUTY_MONTHS,
+  MAX_QUANTITY_DAYS} from '../constants';
+import {getRandomNumber, getRandomElement, sortFisherYates} from '../utils';
 
 const cloneFilmNames = sortFisherYates(filmNames, true);
 const descriptionSentences = descriptionFish.split(`\n`);
@@ -10,7 +26,7 @@ const descriptionSentences = descriptionFish.split(`\n`);
  * @return {String} строка с описанием фильма
  */
 const getMockDescription = () => {
-  const sentencesQuantity = getRandomNumber(3, 1);
+  const sentencesQuantity = getRandomNumber(MAX_QUANTITY_SENTENCES, MIN_QUANTITY_SENTENCES);
 
   return sortFisherYates(descriptionSentences, true)
   .slice(0, sentencesQuantity)
@@ -22,8 +38,8 @@ const getMockDescription = () => {
  *
  * @return {Array} случайный массив с жанрами
  */
-const getRandomGenresArray = () => {
-  const quantityGenres = getRandomNumber(genres.length, 1);
+const getRandomGenres = () => {
+  const quantityGenres = getRandomNumber(genres.length, MIN_QUANTITY_GENRES);
 
   return sortFisherYates(genres, true).slice(0, quantityGenres);
 };
@@ -33,12 +49,12 @@ const getRandomGenresArray = () => {
  *
  * @return {Array} случайный массив с комментариями
  */
-const getRandomCommentsArray = () => {
-  const quantityComments = getRandomNumber(50);
+const getRandomComments = () => {
+  const quantityComments = getRandomNumber(MAX_QUANTITY_COMMENTS);
 
   return new Array(quantityComments)
   .fill(``)
-  .map(() => descriptionFish.substr(getRandomNumber(40), 25));
+  .map(() => descriptionFish.substr(getRandomNumber(descriptionFish.length), MAX_COMMENT_LENGTH));
 };
 
 /**
@@ -46,32 +62,30 @@ const getRandomCommentsArray = () => {
  *
  * @return {Number} случаная дата в миллисекундах
  */
-const getRandomDate = () => new Date(getRandomNumber(2019, 1930), getRandomNumber(0, 11), getRandomNumber(0, 31)).getTime();
+const getRandomDate = () => new Date(getRandomNumber(MAX_YEAR, MIN_YEAR), getRandomNumber(0, MAX_QUANTUTY_MONTHS), getRandomNumber(1, MAX_QUANTITY_DAYS)).getTime();
 
 /**
  * Генерирует объект с моковыми данными для карточки фильма
  *
  * @return {Object}
  */
-const getFilmDataObject = () => {
+export const getFilms = () => {
   return {
     name: cloneFilmNames.pop(),
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
     country: `Uganda`,
-    poster: getRandomItem(posters),
-    rating: (getRandomNumber(100, 10) / 10).toFixed(1),
+    poster: getRandomElement(posters),
+    rating: (getRandomNumber(MAX_RATING * 10, 10) / 10).toFixed(1),
     date: getRandomDate(),
-    duration: getRandomNumber(300, 15),
-    genres: getRandomGenresArray(),
+    duration: getRandomNumber(MAX_FILM_DURATION, MIN_FILM_DURATION),
+    genres: getRandomGenres(),
     description: getMockDescription(),
-    comments: getRandomCommentsArray(),
-    age: getRandomNumber(18),
+    comments: getRandomComments(),
+    age: getRandomNumber(MAX_AGE),
     watchlist: !!getRandomNumber(1),
     history: !!getRandomNumber(1),
     favorites: !!getRandomNumber(1)
   };
 };
-
-export {getFilmDataObject};
