@@ -1,4 +1,5 @@
 import {getStringRating} from '../mock/profile';
+import {createElement} from '../utils';
 
 /**
  * Возвращает разметку профиля со строковым представлением рейтинга
@@ -13,14 +14,39 @@ const getProfileMarkup = (rating) => `
   </section>
 `;
 
-/**
- * Возвращает разметку профиля в зависимости от количетства просмотренных пользователем фильмов
- *
- * @param {Number} filmsQuantity количество просмотренных фильмов
- * @return {String} разметка компонента "профиль"
- */
-export const getProfileComponent = (filmsQuantity) => {
-  const rating = getStringRating(filmsQuantity);
+export default class Profile {
+  constructor(filmsQuantity) {
+    this._rating = getStringRating(filmsQuantity);
+    this._element = null;
+  }
 
-  return getProfileMarkup(rating);
-};
+  /**
+   * Возвращает разметку профиля в зависимости от количетства просмотренных пользователем фильмов
+   *
+   * @param {Number} filmsQuantity количество просмотренных фильмов
+   * @return {String} разметка компонента "профиль"
+   */
+  getTemplate() {
+    return getProfileMarkup(this._rating);
+  }
+
+  /**
+   * Возвращает ссылку на node-элемент меню
+   *
+   * @return {Node}
+   */
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  /**
+   * Очищает ссылку на node-элемент профиль
+   */
+  removeElement() {
+    this._element = null;
+  }
+}

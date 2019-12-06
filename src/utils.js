@@ -1,4 +1,4 @@
-import {monthNames, MINUTES_PER_HOUR} from './constants';
+import {monthNames, MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from './constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -62,11 +62,11 @@ export const sortFilms = (films, name) => {
  * Отрисовывает разметку в указанном месте
  *
  * @param {Node} container элемент, относительно которого добавляется разметка
- * @param {String} markup строковое представление разметки, которую вставляем
+ * @param {Node} element DOM-узел, который вставляем
  * @param {String} position позиция, в которою будет вставлена разметка
  */
-export const renderElement = (container, markup, position = `beforeend`) => {
-  container.insertAdjacentHTML(position, markup);
+export const render = (container, element, position = `beforeend`) => {
+  container.insertAdjacentElement(position, element);
 };
 
 /**
@@ -92,4 +92,32 @@ export const getDateString = (dateTime) => {
   const date = new Date(dateTime);
 
   return `${date.getDay()}  ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+};
+
+/**
+ * Создает Node-элемент на основании переданной разметки
+ *
+ * @param {String} markup
+ * @return {Node} DOM-узел
+ */
+export const createElement = (markup) => {
+  const container = document.createElement(`div`);
+
+  container.innerHTML = markup;
+
+  return container.firstElementChild;
+};
+
+/**
+ * Обрезает строку с описанием фильма до допустимой длинны
+ *
+ * @param {String} description строка с описанием фильма
+ * @return {String} строка с описанием фильма допустимой длины
+ */
+export const cropDescription = (description) => {
+  if (description.length > MAX_LENGTH_DESCRIPTION) {
+    description = `${description.substr(0, MAX_LENGTH_DESCRIPTION)}...`;
+  }
+
+  return description;
 };
