@@ -7,8 +7,7 @@ import {createElement} from '../utils';
  */
 export const getNoFilmsMarkup = () => `
   <section class="films-list">
-    <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-    <p>There are no movies in our database</p>
+    <h2 class="films-list__title">There are no movies in our database</h2>
   </section>
 `;
 
