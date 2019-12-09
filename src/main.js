@@ -1,5 +1,4 @@
 import Profile from './components/profile';
-import Menu from './components/menu';
 import Sort from './components/sort';
 import ContentBlock from './components/content';
 import PageController from './controllers/page-controller';
