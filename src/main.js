@@ -2,8 +2,11 @@ import Profile from './components/profile';
 import Menu from './components/menu';
 import Sort from './components/sort';
 import ContentBlock from './components/content';
+import PageController from './controllers/page-controller';
+import MenuController from './controllers/menu-controller';
 import {renderFooterStatistic} from './footer';
-import {getRandomNumber, render} from './utils';
+import {getRandomNumber} from './utils/common';
+import {render} from './utils/render';
 import {filmNames} from './constants';
 
 import {getFilms} from './mock/films';
@@ -16,13 +19,16 @@ const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
 const drawIndexMarkup = () => {
-  const content = new ContentBlock();
-  content.films = films;
+  const contentBlock = new ContentBlock().getElement();
+  const pageController = new PageController(contentBlock);
+  const menuController = new MenuController(pageController);
 
   render(header, new Profile(userWatchedFilmsQuantity).getElement());
-  render(main, new Menu(films, content).getElement());
+  menuController.render(films);
   render(main, new Sort().getElement());
-  render(main, content.getElement());
+  render(main, contentBlock);
+
+  pageController.render(films);
 };
 
 drawIndexMarkup();

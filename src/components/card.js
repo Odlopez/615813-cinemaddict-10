@@ -1,5 +1,5 @@
-import {transformFilmDuration, createElement, cropDescription, render} from '../utils';
-import FilmDetails from './film-details';
+import {transformFilmDuration, cropDescription} from '../utils/common';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Генерирует разметку карточки фильма в зависимсоти от переданных данных
@@ -34,12 +34,10 @@ const getCardComponent = (film) => {
   </article>`;
 };
 
-export default class Card {
+export default class Card extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
-
-    this.onPopupLinkClick = this.onPopupLinkClick.bind(this);
   }
 
   /**
@@ -52,41 +50,13 @@ export default class Card {
   }
 
   /**
-   * Возвращает ссылку на node-элемент карточки фильма
-   *
-   * @return {Node}
-   */
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-
-      this.init();
-    }
-
-    return this._element;
-  }
-
-  /**
-   * Очищает ссылку на node-элемент карточки фильма
-   */
-  removeElement() {
-    this._element = null;
-  }
-
-  /**
-   * Функция-callback для обработчика события "клик" на интерактивных элементах карточки
-   * Отрисовывает на странице элемент с карточкой подробной информации о фильме
-   */
-  onPopupLinkClick() {
-    render(document.body, new FilmDetails(this._film).getElement());
-  }
-
-  /**
    * Инициализирует обработчики на элементе
+   *
+   * @param {Function} handler
    */
-  init() {
-    this._element.querySelector(`.film-card__poster`).addEventListener(`click`, this.onPopupLinkClick);
-    this._element.querySelector(`.film-card__title`).addEventListener(`click`, this.onPopupLinkClick);
-    this._element.querySelector(`.film-card__comments`).addEventListener(`click`, this.onPopupLinkClick);
+  setHandler(handler) {
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
   }
 }

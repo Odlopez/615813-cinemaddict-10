@@ -15,7 +15,7 @@ import {filmNames,
   MIN_YEAR,
   MAX_QUANTUTY_MONTHS,
   MAX_QUANTITY_DAYS} from '../constants';
-import {getRandomNumber, getRandomElement, sortFisherYates} from '../utils';
+import {getRandomNumber, getRandomElement, sortFisherYates} from '../utils/common';
 
 const cloneFilmNames = sortFisherYates(filmNames, true);
 const descriptionSentences = descriptionFish.split(`\n`);
