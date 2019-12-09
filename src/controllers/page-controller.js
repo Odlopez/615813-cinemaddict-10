@@ -180,5 +180,6 @@ export default class PageController {
     this._filmList = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
+    this._ReadMoreButton.removeElement();
   }
 }
