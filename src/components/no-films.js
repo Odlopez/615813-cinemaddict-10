@@ -1,21 +1,17 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  * Генерирует разметку основого блока с контентом
  *
  * @return {String} строкове представление разметки блока фильмов
  */
-export const getNoFilmsMarkup = () => `
+const getNoFilmsMarkup = () => `
   <section class="films-list">
     <h2 class="films-list__title">There are no movies in our database</h2>
   </section>
 `;
 
-export default class NoFilms {
-  constructor() {
-    this._element = null;
-  }
-
+export default class NoFilms extends AbstractComponent {
   /**
    * Генерирует разметку блока оповещения об отсутствии фильмов
    *
@@ -23,25 +19,5 @@ export default class NoFilms {
    */
   getTemplate() {
     return getNoFilmsMarkup();
-  }
-
-  /**
-   * Возвращает ссылку на node-элемент блока оповещения об отсутствии фильмов
-   *
-   * @return {Node}
-   */
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  /**
-   * Очищает ссылку на node-элемент блока оповещения об отсутствии фильмов
-   */
-  removeElement() {
-    this._element = null;
   }
 }

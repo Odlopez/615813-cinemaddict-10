@@ -1,5 +1,5 @@
-import {transformFilmDuration, getDateString, createElement} from '../utils';
-import {ESC_KEYCODE} from '../constants';
+import AbstractComponent from './abstract-component.js';
+import {transformFilmDuration, getDateString} from '../utils/common';
 
 /**
  * Генерирует разметку равернутой карточки фильма в зависимсоти от переданных данных
@@ -181,14 +181,11 @@ const getFilmDetailsMarkup = (film) => {
   `;
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
-    this._film = film;
-    this._element = null;
-    this._clodeButton = null;
+    super();
 
-    this.onClodeButtonClick = this.onClodeButtonClick.bind(this);
-    this.onDocumentKeydown = this.onDocumentKeydown.bind(this);
+    this._film = film;
   }
 
   /**
@@ -201,65 +198,13 @@ export default class FilmDetails {
   }
 
   /**
-   * Возвращает ссылку на node-элемент развернутой карточки фильма
    *
-   * @return {Node}
+   * @param {Function} cardHandler обработчик клика по кнопке закрытия попапа
+   * @param {Function} documentHandler обработчик нажатия клавиши на клавиатуре
    */
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-      this.init();
-    }
-
-    return this._element;
-  }
-
-  /**
-   * Очищает ссылку на node-элемент развернутой карточки фильма
-   */
-  removeElement() {
-    this._element = null;
-    this._clodeButton = null;
-  }
-
-  /**
-   * Закрывает попап-блок с подробной информацией о фильме
-   */
-  closePopup() {
-    this._clodeButton.removeEventListener(`click`, this.onClodeButtonClick);
-    document.removeEventListener(`keydown`, this.onDocumentKeydown);
-
-    this._element.remove();
-    this.removeElement();
-  }
-
-  /**
-   * Функция-callback обработчика клика по кнопке закрытия попапа
-   */
-  onClodeButtonClick() {
-    this.closePopup();
-  }
-
-  /**
-   * Функция-callback обработчика нажатия клавиши (esc) на клавиатуре
-   * закрывает попап-блок с подробной информацией о фильме
-   *
-   * @param {Event} evt
-   */
-  onDocumentKeydown(evt) {
-    evt.preventDefault();
-
-    if (evt.keyCode === ESC_KEYCODE) {
-      this.closePopup();
-    }
-  }
-
-  /**
-   * Инициализирует обработчики
-   */
-  init() {
-    this._clodeButton = this._element.querySelector(`.film-details__close-btn`);
-    this._clodeButton.addEventListener(`click`, this.onClodeButtonClick);
-    document.addEventListener(`keydown`, this.onDocumentKeydown);
+  setHandler(cardHandler, documentHandler) {
+    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
+    closeButton.addEventListener(`click`, cardHandler);
+    document.addEventListener(`keydown`, documentHandler);
   }
 }

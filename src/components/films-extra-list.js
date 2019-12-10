@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstract-component.js';
 
 /**
  *
@@ -13,9 +13,10 @@ const getFilmsExtraListMarkup = (title) => `
   </section>
 `;
 
-export default class FilmsExtraList {
+export default class FilmsExtraList extends AbstractComponent {
   constructor(title, films) {
-    this._element = null;
+    super();
+
     this._films = films;
     this._title = title;
   }
@@ -30,31 +31,11 @@ export default class FilmsExtraList {
   }
 
   /**
-   * Возвращает ссылку на node-элемент дополнительного списка фильмов
-   *
-   * @return {Node}
-   */
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  /**
    * Возвращает ссылку на node-элемент контейнера фильмов
    *
    * @return {Node}
    */
   getContainer() {
     return this._container;
-  }
-
-  /**
-   * Очищает ссылку на node-элемент дополнительного списка фильмов
-   */
-  removeElement() {
-    this._element = null;
   }
 }

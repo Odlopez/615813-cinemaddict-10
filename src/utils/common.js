@@ -1,4 +1,4 @@
-import {monthNames, MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from './constants';
+import {monthNames, MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from '../constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -59,17 +59,6 @@ export const sortFilms = (films, name) => {
 };
 
 /**
- * Отрисовывает разметку в указанном месте
- *
- * @param {Node} container элемент, относительно которого добавляется разметка
- * @param {Node} element DOM-узел, который вставляем
- * @param {String} position позиция, в которою будет вставлена разметка
- */
-export const render = (container, element, position = `beforeend`) => {
-  container.insertAdjacentElement(position, element);
-};
-
-/**
  * Генерирует строковое представление продолжительности фильма на основании длительности в минутах
  *
  * @param {Number} duration длительность фильма в минутах
@@ -92,20 +81,6 @@ export const getDateString = (dateTime) => {
   const date = new Date(dateTime);
 
   return `${date.getDay()}  ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-};
-
-/**
- * Создает Node-элемент на основании переданной разметки
- *
- * @param {String} markup
- * @return {Node} DOM-узел
- */
-export const createElement = (markup) => {
-  const container = document.createElement(`div`);
-
-  container.innerHTML = markup;
-
-  return container.firstElementChild;
 };
 
 /**

@@ -1,5 +1,5 @@
+import AbstractComponent from './abstract-component.js';
 import {getStringRating} from '../mock/profile';
-import {createElement} from '../utils';
 
 /**
  * Возвращает разметку профиля со строковым представлением рейтинга
@@ -14,10 +14,11 @@ const getProfileMarkup = (rating) => `
   </section>
 `;
 
-export default class Profile {
+export default class Profile extends AbstractComponent {
   constructor(filmsQuantity) {
+    super();
+
     this._rating = getStringRating(filmsQuantity);
-    this._element = null;
   }
 
   /**
@@ -28,25 +29,5 @@ export default class Profile {
    */
   getTemplate() {
     return getProfileMarkup(this._rating);
-  }
-
-  /**
-   * Возвращает ссылку на node-элемент меню
-   *
-   * @return {Node}
-   */
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  /**
-   * Очищает ссылку на node-элемент профиль
-   */
-  removeElement() {
-    this._element = null;
   }
 }
