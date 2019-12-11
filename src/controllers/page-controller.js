@@ -1,4 +1,5 @@
 import {render, remove} from '../utils/render';
+import Sort from '../components/sort';
 import FilmsExtraList from '../components/films-extra-list';
 import FilmsList from '../components/films-list';
 import Card from '../components/card';
@@ -38,6 +39,7 @@ export default class PageController {
     this._ratedExtraList = null;
     this._commentedExtraList = null;
     this._ReadMoreButton = new ReadMoreButton();
+    this._Sort = new Sort();
 
     this._filterLinks = null;
   }
@@ -127,11 +129,33 @@ export default class PageController {
   }
 
   /**
-  * Перерисовываем в основном блоке весь соответствующий контент
-  *
-  * @param {Array} films массив объектов с данными о фильмах
-  */
-  render(films) {
+   * Возвращает callback для обработчика клика по кнопке сортировки
+   *
+   * @param {Array} films массив объектов с данными о фильмах
+   * @return {Function} функция-callback для обработчика клика по кнопке сортировки
+   */
+  getSortFilmsCallback(films) {
+    return (sortValue) => {
+      let sortedFilms = films.slice();
+
+      switch (sortValue) {
+        case `date`:
+          sortedFilms.sort((a, b) => b.date - a.date);
+          break;
+        case `rating`:
+          sortedFilms.sort((a, b) => b.rating - a.rating);
+      }
+
+      this.renderFilms(sortedFilms);
+    };
+  }
+
+  /**
+   * Отрисовывает все блоки с карточками фильмов
+   *
+   * @param {Array} films массив объектов с данными о фильмах
+   */
+  renderFilms(films) {
     this.clear();
 
     // если фильмов нет, отрисовываем другой шаблон
@@ -171,6 +195,20 @@ export default class PageController {
   }
 
   /**
+  * Перерисовываем в основном блоке весь соответствующий контент
+  *
+  * @param {Array} films массив объектов с данными о фильмах
+  */
+  render(films) {
+    remove(this._Sort);
+    render(this._container, this._Sort.getElement(), `beforebegin`);
+
+    this._Sort.setHandler(this.getSortFilmsCallback(films));
+
+    this.renderFilms(films);
+  }
+
+  /**
    * Очищает контентный блок, сбрасывает счетчик, удаляет ссылки на дочерние элементы
    */
   clear() {
@@ -180,6 +218,6 @@ export default class PageController {
     this._filmList = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
-    this._ReadMoreButton.removeElement();
+    remove(this._ReadMoreButton);
   }
 }

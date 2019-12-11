@@ -13,6 +13,11 @@ export default class AbstractComponent {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
 
+  /**
+   * Возвращает ссылку на node-элемент
+   *
+   * @return {Node}
+   */
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
@@ -21,6 +26,9 @@ export default class AbstractComponent {
     return this._element;
   }
 
+  /**
+   * Удаляет ссылку на элемент
+   */
   removeElement() {
     this._element = null;
   }

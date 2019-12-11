@@ -1,5 +1,4 @@
 import Profile from './components/profile';
-import Sort from './components/sort';
 import ContentBlock from './components/content';
 import PageController from './controllers/page-controller';
 import MenuController from './controllers/menu-controller';
@@ -24,7 +23,6 @@ const drawIndexMarkup = () => {
 
   render(header, new Profile(userWatchedFilmsQuantity).getElement());
   menuController.render(films);
-  render(main, new Sort().getElement());
   render(main, contentBlock);
 
   pageController.render(films);
