@@ -65,11 +65,25 @@ const getRandomComments = () => {
 const getRandomDate = () => new Date(getRandomNumber(MAX_YEAR, MIN_YEAR), getRandomNumber(0, MAX_QUANTUTY_MONTHS), getRandomNumber(1, MAX_QUANTITY_DAYS)).getTime();
 
 /**
+ * Создаеб объект с дополнительными данными о фильме
+ */
+const getAdditionalFilmData = () => {
+  const watchlist = !!getRandomNumber(1);
+  const history = watchlist ? false : !!getRandomNumber(1);
+  const favorites = history ? !!getRandomNumber(1) : false;
+  const score = history ? getRandomNumber(MAX_RATING - 1, 1) : null;
+
+  return {watchlist, history, favorites, score};
+};
+
+/**
  * Генерирует объект с моковыми данными для карточки фильма
  *
  * @return {Object}
  */
 export const getFilms = () => {
+  const additionalFilmData = getAdditionalFilmData();
+
   return {
     name: cloneFilmNames.pop(),
     director: `Anthony Mann`,
@@ -84,8 +98,6 @@ export const getFilms = () => {
     description: getMockDescription(),
     comments: getRandomComments(),
     age: getRandomNumber(MAX_AGE),
-    watchlist: !!getRandomNumber(1),
-    history: !!getRandomNumber(1),
-    favorites: !!getRandomNumber(1)
+    ...additionalFilmData
   };
 };

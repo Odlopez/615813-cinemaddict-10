@@ -2,9 +2,7 @@ import {render, remove} from '../utils/render';
 import Sort from '../components/sort';
 import FilmsExtraList from '../components/films-extra-list';
 import FilmsList from '../components/films-list';
-import Card from '../components/card';
-import FilmDetails from '../components/film-details';
-import PopupController from './popup-controller';
+import MovieController from './movie-controller';
 import NoFilms from '../components/no-films';
 import ReadMoreButton from '../components/read-more-button';
 import {CARD_QUANTITY, extraListsOptions, EXTRA_CARD_QUANTITY} from '../constants';
@@ -34,14 +32,26 @@ export default class PageController {
   constructor(container) {
     this._container = container;
 
+    this._films = [];
     this._counter = 0;
     this._filmList = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
     this._ReadMoreButton = new ReadMoreButton();
     this._Sort = new Sort();
-
     this._filterLinks = null;
+    this._renderedFilms = [];
+
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+  }
+
+  get films() {
+    return this._films;
+  }
+
+  set films(films) {
+    this._films = films;
   }
 
   /**
@@ -72,7 +82,9 @@ export default class PageController {
     const portionfilms = films.slice(this._counter, this._counter + CARD_QUANTITY);
 
     portionfilms.forEach((item) => {
-      render(filmsListContainer, this.getCard(item));
+      const filmController = new MovieController(filmsListContainer, this._onDataChange, this._onViewChange);
+      filmController.render(item);
+      this._renderedFilms.push(filmController);
     });
 
     this._counter += CARD_QUANTITY;
@@ -86,7 +98,9 @@ export default class PageController {
    */
   fillsExstraList(container, films) {
     films.forEach((item) => {
-      render(container, this.getCard(item));
+      const filmController = new MovieController(container, this._onDataChange, this._onViewChange);
+      filmController.render(item);
+      this._renderedFilms.push(filmController);
     });
   }
 
@@ -107,25 +121,6 @@ export default class PageController {
     }
 
     return sortFilms(films, sortProperty).slice(0, EXTRA_CARD_QUANTITY);
-  }
-
-  /**
-   * Возвращает node-элемент карточки с подключенными обработчиками
-   *
-   * @param {Object} film объект с данными фильтра
-   * @return {Node} элемент карточки
-   */
-  getCard(film) {
-    const card = new Card(film);
-
-    card.setHandler(() => {
-      const popup = new PopupController(new FilmDetails(film));
-      popup.setHandler();
-
-      render(document.body, popup.getElement());
-    });
-
-    return card.getElement();
   }
 
   /**
@@ -151,11 +146,39 @@ export default class PageController {
   }
 
   /**
+   * Перерисовывает карточки при изменении данных фильма
+   *
+   * @param {Object} filmController инстанс класса компонента фильма
+   * @param {Object} newData новые данные фильма
+   */
+  _onDataChange(filmController, newData) {
+    const index = this.films.findIndex((it) => it === filmController.film);
+
+    if (index === -1) {
+      return;
+    }
+
+    this.films = [].concat(this.films.slice(0, index), newData, this.films.slice(index + 1));
+
+    filmController.render(newData);
+  }
+
+  /**
+   * Вызывает у всех инстансов класса фильма метод setDefaultView при открытии попапа
+   */
+  _onViewChange() {
+    this._renderedFilms.forEach((item) => {
+      item.setDefaultView();
+    });
+  }
+
+  /**
    * Отрисовывает все блоки с карточками фильмов
    *
    * @param {Array} films массив объектов с данными о фильмах
    */
   renderFilms(films) {
+    this.films = films;
     this.clear();
 
     // если фильмов нет, отрисовываем другой шаблон

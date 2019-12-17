@@ -54,9 +54,40 @@ export default class Card extends AbstractComponent {
    *
    * @param {Function} handler
    */
-  setHandler(handler) {
+  setOpenDetailstHandler(handler) {
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+  }
+
+
+  /**
+   * Вешает обработчик клика на кнопку "Add to watchlist"
+   *
+   * @param {Function} handler
+   */
+  setAddWatchlistButtonHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  /**
+   * Вешает обработчик клика на кнопку "Already watched"
+   *
+   * @param {Function} handler
+   */
+  setAlreadyWatchedButtonHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  /**
+   * Вешает обработчик клика на кнопку "Add to favorites"
+   *
+   * @param {Function} handler
+   */
+  setAddFavoriteButtonHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
   }
 }
