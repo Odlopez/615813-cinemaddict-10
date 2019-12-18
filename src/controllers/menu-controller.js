@@ -10,8 +10,9 @@ export default class MenuController {
   }
 
   /**
+   * Отрисовывает компонент меню на странице
    *
-   * @param {Array} films
+   * @param {Array} films массив объектов с данными о фильмах
    */
   render(films) {
     const menuInstance = new Menu(films);

@@ -1,5 +1,68 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component';
 import {transformFilmDuration, getDateString} from '../utils/common';
+
+/**
+ * Возвращает разметку блока оценки фильма, если фильм просмотрен
+ *
+ * @param {Object} film объект с данными фильма
+ * @return {String} строкове представление разметки блока с оценкой фильма
+ */
+const getMiddleContainerMarkup = (film) => {
+  const {history, score} = film;
+  if (!history) {
+    return ``;
+  }
+
+  return `<div class="form-details__middle-container">
+    <section class="film-details__user-rating-wrap">
+      <div class="film-details__user-rating-controls">
+        <button class="film-details__watched-reset" type="button">Undo</button>
+      </div>
+
+      <div class="film-details__user-score">
+        <div class="film-details__user-rating-poster">
+          <img src="./images/posters/the-great-flamarion.jpg" alt="film-poster" class="film-details__user-rating-img">
+        </div>
+
+        <section class="film-details__user-rating-inner">
+          <h3 class="film-details__user-rating-title">The Great Flamarion</h3>
+
+          <p class="film-details__user-rating-feelings">How you feel it?</p>
+
+          <div class="film-details__user-rating-score">
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1" ${score === 1 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-1">1</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2" ${score === 2 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-2">2</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3" ${score === 3 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-3">3</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4" ${score === 4 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-4">4</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5" ${score === 5 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-5">5</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6" ${score === 6 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-6">6</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7" ${score === 7 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-7">7</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8" ${score === 8 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-8">8</label>
+
+            <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9"  ${score === 9 ? `checked` : ``}>
+            <label class="film-details__user-rating-label" for="rating-9">9</label>
+
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>`;
+};
 
 /**
  * Генерирует разметку равернутой карточки фильма в зависимсоти от переданных данных
@@ -8,7 +71,7 @@ import {transformFilmDuration, getDateString} from '../utils/common';
  * @return {String} строковое представление разметки развернутой карточки фильма
  */
 const getFilmDetailsMarkup = (film) => {
-  const {poster, age, name, rating, director, writers, actors, country, genres, description} = film;
+  const {poster, age, name, rating, director, writers, actors, country, genres, description, watchlist, history, favorites} = film;
   let {date, duration} = film;
 
   return `<section class="film-details">
@@ -62,7 +125,7 @@ const getFilmDetailsMarkup = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${genres.length === 1 ? `Genre` : `Genres`}</td>
                   <td class="film-details__cell">
                     ${genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
                 </tr>
@@ -75,16 +138,18 @@ const getFilmDetailsMarkup = (film) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${watchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${history ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favorites ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
+
+        ${getMiddleContainerMarkup(film)}
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
@@ -181,7 +246,7 @@ const getFilmDetailsMarkup = (film) => {
   `;
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
 
@@ -202,9 +267,43 @@ export default class FilmDetails extends AbstractComponent {
    * @param {Function} cardHandler обработчик клика по кнопке закрытия попапа
    * @param {Function} documentHandler обработчик нажатия клавиши на клавиатуре
    */
-  setHandler(cardHandler, documentHandler) {
+  setCloseHandler(cardHandler, documentHandler) {
     const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
     closeButton.addEventListener(`click`, cardHandler);
     document.addEventListener(`keydown`, documentHandler);
+  }
+
+  /**
+   * Вешает обработчик клика на кнопку "Add to watchlist"
+   *
+   * @param {Function} handler
+   */
+  setAddWatchlistButtonHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  /**
+   * Вешает обработчик клика на кнопку "Already watched"
+   *
+   * @param {Function} handler
+   */
+  setAlreadyWatchedButtonHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  /**
+   * Вешает обработчик клика на кнопку "Add to favorites"
+   *
+   * @param {Function} handler
+   */
+  setAddFavoriteButtonHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
+  }
+
+  recoveryListeners() {
+
   }
 }
