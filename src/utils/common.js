@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {monthNames, MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from '../constants';
 
 /**
@@ -78,9 +79,7 @@ export const transformFilmDuration = (duration) => {
  * @return {String} дата вида DD Mont-name YYY
  */
 export const getDateString = (dateTime) => {
-  const date = new Date(dateTime);
-
-  return `${date.getDay()}  ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+  return moment(dateTime).format(`DD MMMM YYYY`);
 };
 
 /**

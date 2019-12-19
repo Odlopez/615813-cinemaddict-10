@@ -160,7 +160,7 @@ export default class PageController {
 
     this.films = [].concat(this.films.slice(0, index), newData, this.films.slice(index + 1));
 
-    filmController.render(newData);
+    filmController.rerender(newData);
   }
 
   /**

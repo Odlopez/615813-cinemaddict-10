@@ -156,6 +156,20 @@ export default class MovieController {
   render(film) {
     this.film = film;
 
+    this._card = new Card(film);
+
+    this._subscribeCardOnEvents();
+
+    render(this._container, this._card.getElement());
+  }
+
+  /**
+   *
+   * @param {*} film
+   */
+  rerender(film) {
+    this.film = film;
+
     const oldPopup = this._popup;
     const oldCard = this._card;
 
@@ -163,12 +177,8 @@ export default class MovieController {
 
     this._subscribeCardOnEvents();
 
-    if (oldCard) {
-      oldCard.getElement().replaceWith(this._card.getElement());
-      remove(oldCard);
-    } else {
-      render(this._container, this._card.getElement());
-    }
+    oldCard.getElement().replaceWith(this._card.getElement());
+    remove(oldCard);
 
     if (oldPopup) {
       this.createPopup();
