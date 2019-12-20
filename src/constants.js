@@ -14,6 +14,7 @@ export const extraListsOptions = {
   commentedProperty: `comments`,
 };
 export const filterNames = [`Watchlist`, `History`, `Favorites`];
+export const emotionNames = [`smile`, `sleeping`, `puke`, `angry`];
 export const filmNames = [
   `Пятый Элемент`,
   `Властелин Колец`,
@@ -54,27 +55,13 @@ export const genres = [
   `Comedy`,
   `Cartoon`
 ];
-export const monthNames = {
-  0: `January`,
-  1: `February`,
-  2: `March`,
-  3: `April`,
-  4: `May`,
-  5: `June`,
-  6: `July`,
-  7: `August`,
-  8: `September`,
-  9: `October`,
-  10: `November`,
-  11: `December`
-};
 export const MAX_LENGTH_DESCRIPTION = 139;
 export const ESC_KEYCODE = 27;
 // mock
 export const MAX_QUANTITY_SENTENCES = 3;
 export const MIN_QUANTITY_SENTENCES = 1;
 export const MIN_QUANTITY_GENRES = 1;
-export const MAX_QUANTITY_COMMENTS = 50;
+export const MAX_QUANTITY_COMMENTS = 13;
 export const MAX_COMMENT_LENGTH = 25;
 export const MAX_FILM_DURATION = 300;
 export const MIN_FILM_DURATION = 15;

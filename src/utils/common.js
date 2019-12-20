@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {monthNames, MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from '../constants';
+import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from '../constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -94,4 +94,18 @@ export const cropDescription = (description) => {
   }
 
   return description;
+};
+
+/**
+ * Подсчитывает в массиве данных количество фильмов, соответствующих заданной категории
+ *
+ * @param {Array} films массив с данными карточек фильмов
+ * @param {String} category категория, по которой фильтруем данные фильмов
+ * @return {Number} количество фильмов соответстующей категории
+ */
+export const countsFilmAsCategory = (films, category) => {
+  return films.reduce((hoarder, item) => {
+    hoarder += item[category] ? 1 : 0;
+    return hoarder;
+  }, 0);
 };
