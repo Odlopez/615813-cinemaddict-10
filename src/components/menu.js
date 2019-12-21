@@ -1,27 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {filterNames} from '../constants';
-import {getFilters} from '../mock/menu';
-
-/**
- * Генерирует разметку одного пункта фильтра
- *
- * @param {String} name название пунтка фильтра
- * @param {Number} quantity количество фильмов в пункте
- * @return {String} разметка пункта фильтра
- */
-const getItemFilterMarkup = (name, quantity) => `
-  <a href="#${name.toLowerCase()}" class="main-navigation__item">
-    ${name}
-  <span class="main-navigation__item-count">${quantity}</span></a>
-`;
-
-/**
- * Генерирует разметку пунктов фильтра с количеством фильмов соответствующих категориям
- *
- * @param {Object} filters объект с данными о фильмах в пунктах фильтра
- * @return {String} разметка пунктов фильтра
- */
-const getFiltersMarkup = (filters) => filterNames.map((item) => getItemFilterMarkup(item, filters[item])).join(``);
+import {countsFilmAsCategory} from '../utils/common';
 
 /**
  * Генерирует разметку всего меню с фильтрами
@@ -32,7 +10,18 @@ const getFiltersMarkup = (filters) => filterNames.map((item) => getItemFilterMar
 const getMenuMarkup = (films) => `
   <nav class="main-navigation">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    ${getFiltersMarkup(getFilters(films))}
+    <a href="#watchlist" class="main-navigation__item">
+      Watchlist
+      <span class="main-navigation__item-count">${countsFilmAsCategory(films, `watchlist`)}</span>
+    </a>
+    <a href="#history" class="main-navigation__item">
+      History
+      <span class="main-navigation__item-count">${countsFilmAsCategory(films, `history`)}</span>
+    </a>
+    <a href="#favorites" class="main-navigation__item">
+      Favorites
+      <span class="main-navigation__item-count">${countsFilmAsCategory(films, `favorites`)}</span>
+    </a>
     <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
   </nav>
 `;

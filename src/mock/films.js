@@ -2,6 +2,7 @@ import {filmNames,
   posters,
   descriptionFish,
   genres,
+  emotionNames,
   MAX_QUANTITY_SENTENCES,
   MIN_QUANTITY_SENTENCES,
   MIN_QUANTITY_GENRES,
@@ -54,7 +55,15 @@ const getRandomComments = () => {
 
   return new Array(quantityComments)
   .fill(``)
-  .map(() => descriptionFish.substr(getRandomNumber(descriptionFish.length), MAX_COMMENT_LENGTH));
+  .map(() => {
+    return {
+      id: Symbol(),
+      text: descriptionFish.substr(getRandomNumber(descriptionFish.length), MAX_COMMENT_LENGTH),
+      emotion: getRandomElement(emotionNames),
+      author: `John Doe`,
+      date: new Date()
+    };
+  });
 };
 
 /**
@@ -76,6 +85,10 @@ const getAdditionalFilmData = () => {
   return {watchlist, history, favorites, score};
 };
 
+const getRandomID = () => {
+  return Symbol();
+}
+
 /**
  * Генерирует объект с моковыми данными для карточки фильма
  *
@@ -85,6 +98,7 @@ export const getFilms = () => {
   const additionalFilmData = getAdditionalFilmData();
 
   return {
+    id: getRandomID(),
     name: cloneFilmNames.pop(),
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],

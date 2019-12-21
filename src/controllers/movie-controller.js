@@ -2,6 +2,7 @@ import {render, remove} from '../utils/render';
 import Card from '../components/card';
 import FilmDetails from '../components/film-details';
 import {ESC_KEYCODE} from '../constants';
+import he from 'he';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -61,8 +62,6 @@ export default class MovieController {
    * @param {Event} evt
    */
   onDocumentKeydown(evt) {
-    evt.preventDefault();
-
     if (evt.keyCode === ESC_KEYCODE) {
       this.closePopup();
     }
@@ -77,6 +76,43 @@ export default class MovieController {
     this._subscribePopupOnEvents();
   }
 
+  _getActiveFilterName() {
+    const activeFilterLink = document.querySelector(`.main-navigation__item--active`);
+
+    return activeFilterLink ? activeFilterLink.href.match(/#.{1,}/)[0].slice(1) : ``;
+  }
+
+  _onWatchListChange() {
+    this._onDataChange(this, Object.assign({}, this.film, {
+      watchlist: !this.film.watchlist,
+      history: false
+    }));
+
+    if (this._getActiveFilterName() === `watchlist`) {
+      remove(this._card);
+    }
+  }
+
+  _onWatchedChange() {
+    this._onDataChange(this, Object.assign({}, this.film, {
+      history: !this.film.history
+    }));
+
+    if (this._getActiveFilterName() === `history`) {
+      remove(this._card);
+    }
+  }
+
+  _onFavoriteChange() {
+    this._onDataChange(this, Object.assign({}, this.film, {
+      favorites: !this.film.favorites
+    }));
+
+    if (this._getActiveFilterName() === `favorites`) {
+      remove(this._card);
+    }
+  }
+
   /**
    * Вешает на элемент попапа обработчики событий
    */
@@ -86,27 +122,59 @@ export default class MovieController {
     this._popup.setAddWatchlistButtonHandler((evt) => {
       evt.preventDefault();
 
-      this._onDataChange(this, Object.assign({}, this.film, {
-        watchlist: true,
-        history: false
-      }));
+      this._onWatchListChange();
     });
 
     this._popup.setAlreadyWatchedButtonHandler((evt) => {
       evt.preventDefault();
 
-      this._onDataChange(this, Object.assign({}, this.film, {
-        watchlist: false,
-        history: true
-      }));
+      this._onWatchedChange();
     });
 
     this._popup.setAddFavoriteButtonHandler((evt) => {
       evt.preventDefault();
 
-      this._onDataChange(this, Object.assign({}, this.film, {
-        favorites: !this.film.favorites
-      }));
+      this._onFavoriteChange();
+    });
+
+    this._popup.setDeleteCommentButtonHandler((evt) => {
+      evt.preventDefault();
+
+      const comment = evt.target.closest(`.film-details__comment`);
+
+      if (!comment) {
+        return;
+      }
+
+      const index = Array.from(this._popup.getElement().querySelectorAll(`.film-details__comment-delete`))
+        .findIndex((item) => item === comment);
+
+      this.film.comments.splice(index, 1);
+
+      this._onDataChange(this, Object.assign({}, this.film));
+
+      comment.remove();
+    });
+
+    this._popup.setFormHandler((evt) => {
+      if (evt.ctrlKey && evt.key === `Enter`) {
+        const data = new Map(new FormData(evt.target.form));
+
+        const comment = data.get(`comment`);
+        const emoji = data.get(`comment-emoji`);
+
+        if (comment && emoji) {
+          this.film.comments.unshift({
+            id: Symbol(),
+            text: he.encode(comment),
+            emotion: emoji,
+            author: `John Doe`,
+            date: new Date()
+          });
+
+          this._onDataChange(this, Object.assign({}, this.film));
+        }
+      }
     });
   }
 
@@ -125,27 +193,19 @@ export default class MovieController {
     this._card.setAddWatchlistButtonHandler((evt) => {
       evt.preventDefault();
 
-      this._onDataChange(this, Object.assign({}, this.film, {
-        watchlist: true,
-        history: false
-      }));
+      this._onWatchListChange();
     });
 
     this._card.setAlreadyWatchedButtonHandler((evt) => {
       evt.preventDefault();
 
-      this._onDataChange(this, Object.assign({}, this.film, {
-        watchlist: false,
-        history: true
-      }));
+      this._onWatchedChange();
     });
 
     this._card.setAddFavoriteButtonHandler((evt) => {
       evt.preventDefault();
 
-      this._onDataChange(this, Object.assign({}, this.film, {
-        favorites: !this.film.favorites
-      }));
+      this._onFavoriteChange();
     });
   }
 
@@ -155,7 +215,6 @@ export default class MovieController {
    */
   render(film) {
     this.film = film;
-
     this._card = new Card(film);
 
     this._subscribeCardOnEvents();

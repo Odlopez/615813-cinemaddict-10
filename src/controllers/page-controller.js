@@ -29,9 +29,10 @@ const isNotIndex = (films, sortProperty) => !films.filter((item) => item[sortPro
 const isEqualRating = (films, sortProperty) => films.every((item, i, arr) => item[sortProperty] === (arr[i + 1] ? arr[i + 1][sortProperty] : item[sortProperty]));
 
 export default class PageController {
-  constructor(container) {
+  constructor(container, movies) {
     this._container = container;
 
+    this._movies = movies;
     this._films = [];
     this._counter = 0;
     this._filmList = null;
@@ -44,6 +45,11 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this.render = this.render.bind(this);
+    this.renderExtraLists = this.renderExtraLists.bind(this);
+
+    this._movies.setFilterChangeHandler(this.render);
+    this._movies.setDataChangeHandler(this.renderExtraLists);
   }
 
   get films() {
@@ -57,14 +63,10 @@ export default class PageController {
   /**
    * Отрисовывает блоки-контейнеры для карточек фильмов
    */
-  renderEmptyLists() {
+  _renderEmptyList() {
     this._filmList = new FilmsList().getElement();
-    this._ratedExtraList = new FilmsExtraList(ratedTitle).getElement();
-    this._commentedExtraList = new FilmsExtraList(commentedTitle).getElement();
 
     render(this._container, this._filmList);
-    render(this._container, this._ratedExtraList);
-    render(this._container, this._commentedExtraList);
   }
 
   /**
@@ -72,7 +74,7 @@ export default class PageController {
    *
    * @param {Array} films массив объектов с данными о фильмах
    */
-  renderPortionOfCards(films) {
+  _renderPortionOfCards(films) {
     if (!this._filmList) {
       return;
     }
@@ -96,12 +98,38 @@ export default class PageController {
    * @param {Node} container
    * @param {Array} films массив объектов с данными о фильмах
    */
-  fillsExstraList(container, films) {
+  _fillsExstraList(container, films) {
     films.forEach((item) => {
       const filmController = new MovieController(container, this._onDataChange, this._onViewChange);
       filmController.render(item);
       this._renderedFilms.push(filmController);
     });
+  }
+
+  /**
+   * Отрисовываем дополнительные блоки с карточками фильмов
+   */
+  renderExtraLists() {
+    this._clearExtraLists();
+
+    this._ratedExtraList = new FilmsExtraList(ratedTitle).getElement();
+    this._commentedExtraList = new FilmsExtraList(commentedTitle).getElement();
+
+    const ratedFilms = this._getFilmsExtraListData(this._movies.getFilms(), ratedProperty);
+    const commentedFilms = this._getFilmsExtraListData(this._movies.getFilms(), commentedProperty);
+    const ratedContainer = this._ratedExtraList.querySelector(`.films-list__container`);
+    const commentedContainer = this._commentedExtraList.querySelector(`.films-list__container`);
+
+    render(this._container, this._ratedExtraList);
+    render(this._container, this._commentedExtraList);
+
+    if (ratedFilms.length) {
+      this._fillsExstraList(ratedContainer, ratedFilms);
+    }
+
+    if (commentedFilms.length) {
+      this._fillsExstraList(commentedContainer, commentedFilms);
+    }
   }
 
   /**
@@ -111,7 +139,7 @@ export default class PageController {
     * @param {*} sortProperty имя свойства, по которому сортируются карточки фильмов
     * @return {Array} отсортированный массив с данными о фильмах
     */
-  getFilmsExtraListData(films, sortProperty) {
+  _getFilmsExtraListData(films, sortProperty) {
     if (isNotIndex(films, sortProperty)) {
       return [];
     }
@@ -129,7 +157,7 @@ export default class PageController {
    * @param {Array} films массив объектов с данными о фильмах
    * @return {Function} функция-callback для обработчика клика по кнопке сортировки
    */
-  getSortFilmsCallback(films) {
+  _getSortFilmsCallback(films) {
     return (sortValue) => {
       let sortedFilms = films.slice();
 
@@ -141,7 +169,7 @@ export default class PageController {
           sortedFilms.sort((a, b) => b.rating - a.rating);
       }
 
-      this.renderFilms(sortedFilms);
+      this._renderFilms(sortedFilms);
     };
   }
 
@@ -152,13 +180,7 @@ export default class PageController {
    * @param {Object} newData новые данные фильма
    */
   _onDataChange(filmController, newData) {
-    const index = this.films.findIndex((it) => it === filmController.film);
-
-    if (index === -1) {
-      return;
-    }
-
-    this.films = [].concat(this.films.slice(0, index), newData, this.films.slice(index + 1));
+    this._movies.refreshFilm(newData.id, newData);
 
     filmController.rerender(newData);
   }
@@ -177,9 +199,8 @@ export default class PageController {
    *
    * @param {Array} films массив объектов с данными о фильмах
    */
-  renderFilms(films) {
-    this.films = films;
-    this.clear();
+  _renderFilms(films) {
+    this._clearAll();
 
     // если фильмов нет, отрисовываем другой шаблон
     if (!films || !films.length) {
@@ -187,26 +208,13 @@ export default class PageController {
       return;
     }
 
-    this.renderEmptyLists();
-
-    const ratedFilms = this.getFilmsExtraListData(films, ratedProperty);
-    const commentedFilms = this.getFilmsExtraListData(films, commentedProperty);
-    const ratedContainer = this._ratedExtraList.querySelector(`.films-list__container`);
-    const commentedContainer = this._commentedExtraList.querySelector(`.films-list__container`);
-
-    this.renderPortionOfCards(films);
-
-    if (ratedFilms.length) {
-      this.fillsExstraList(ratedContainer, ratedFilms);
-    }
-
-    if (commentedFilms.length) {
-      this.fillsExstraList(commentedContainer, commentedFilms);
-    }
+    this._renderEmptyList();
+    this._renderPortionOfCards(films);
+    this.renderExtraLists();
 
     if (films.length > CARD_QUANTITY) {
       this._ReadMoreButton.getElement().addEventListener(`click`, () => {
-        this.renderPortionOfCards(films);
+        this._renderPortionOfCards(films);
 
         if (this._counter >= films.length) {
           remove(this._ReadMoreButton);
@@ -220,23 +228,40 @@ export default class PageController {
   /**
   * Перерисовываем в основном блоке весь соответствующий контент
   *
-  * @param {Array} films массив объектов с данными о фильмах
   */
-  render(films) {
+  render() {
     remove(this._Sort);
     render(this._container, this._Sort.getElement(), `beforebegin`);
 
-    this._Sort.setHandler(this.getSortFilmsCallback(films));
+    this._Sort.setHandler(this._getSortFilmsCallback(this._movies.getFilms()));
 
-    this.renderFilms(films);
+    this._renderFilms(this._movies.getFilms());
+  }
+
+  /**
+   * Очищает дополнительные блоки с карточками фильмов
+   */
+  _clearExtraLists() {
+    if (this._ratedExtraList) {
+      this._ratedExtraList.remove();
+    }
+
+    if (this._commentedExtraList) {
+      this._commentedExtraList.remove();
+    }
+
+    this._ratedExtraList = null;
+    this._commentedExtraList = null;
   }
 
   /**
    * Очищает контентный блок, сбрасывает счетчик, удаляет ссылки на дочерние элементы
    */
-  clear() {
+  _clearAll() {
+    this._clearExtraLists();
     this._container.innerHTML = ``;
     this._counter = 0;
+    this._renderedFilms = [];
 
     this._filmList = null;
     this._ratedExtraList = null;

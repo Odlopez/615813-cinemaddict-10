@@ -1,5 +1,6 @@
-import AbstractSmartComponent from './abstract-smart-component';
+import AbstractComponent from './abstract-smart-component';
 import {transformFilmDuration, getDateString} from '../utils/common';
+import moment from 'moment';
 
 /**
  * Возвращает разметку блока оценки фильма, если фильм просмотрен
@@ -65,13 +66,42 @@ const getMiddleContainerMarkup = (film) => {
 };
 
 /**
+ * Возвращает разметку блока с комментариями
+ *
+ * @param {Array} comments массив с комментариями
+ * @return {String} строкове представление разметки блока с комментариями
+ */
+const getCommentsMarkup = (comments) => {
+  return comments.map((item) => {
+    const {text, emotion, author, date} = item;
+
+
+    return `<li class="film-details__comment">
+        <span class="film-details__comment-emoji">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
+        </span>
+        <div>
+          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-info">
+            <span class="film-details__comment-author">${author}</span>
+            <span class="film-details__comment-day">${moment(date).format(`YYYY/MM/DD HH:MM`)}</span>
+            <button class="film-details__comment-delete">Delete</button>
+          </p>
+        </div>
+      </li>
+    `;
+  });
+
+};
+
+/**
  * Генерирует разметку равернутой карточки фильма в зависимсоти от переданных данных
  *
  * @param {Object} film объект с данными фильма
  * @return {String} строковое представление разметки развернутой карточки фильма
  */
 const getFilmDetailsMarkup = (film) => {
-  const {poster, age, name, rating, director, writers, actors, country, genres, description, watchlist, history, favorites} = film;
+  const {poster, age, name, rating, director, writers, actors, country, genres, description, watchlist, history, favorites, comments} = film;
   let {date, duration} = film;
 
   return `<section class="film-details">
@@ -153,61 +183,10 @@ const getFilmDetailsMarkup = (film) => {
 
         <div class="form-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
             <ul class="film-details__comments-list">
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Interesting setting and a good cast</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">Tim Macoveev</span>
-                    <span class="film-details__comment-day">2019/12/31 23:59</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Booooooooooring</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Very very old. Meh</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">2 days ago</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">
-                  <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">
-                </span>
-                <div>
-                  <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
-                    <span class="film-details__comment-day">Today</span>
-                    <button class="film-details__comment-delete">Delete</button>
-                  </p>
-                </div>
-              </li>
+              ${getCommentsMarkup(comments)}
             </ul>
 
             <div class="film-details__new-comment">
@@ -218,22 +197,22 @@ const getFilmDetailsMarkup = (film) => {
               </label>
 
               <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
                 <label class="film-details__emoji-label" for="emoji-smile">
                   <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
                 <label class="film-details__emoji-label" for="emoji-sleeping">
                   <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="puke">
                 <label class="film-details__emoji-label" for="emoji-gpuke">
                   <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
                 </label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
+                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
                 <label class="film-details__emoji-label" for="emoji-angry">
                   <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
                 </label>
@@ -246,7 +225,7 @@ const getFilmDetailsMarkup = (film) => {
   `;
 };
 
-export default class FilmDetails extends AbstractSmartComponent {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
     super();
 
@@ -303,7 +282,24 @@ export default class FilmDetails extends AbstractSmartComponent {
       .addEventListener(`click`, handler);
   }
 
-  recoveryListeners() {
+  /**
+   * Вешает обработчик клика на кнопки удаления комментария
+   *
+   * @param {Function} handler
+   */
+  setDeleteCommentButtonHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
+      item.addEventListener(`click`, handler);
+    });
+  }
 
+  /**
+   * Вешает обработчик сабмита на форму
+   *
+   * @param {Function} handler
+   */
+  setFormHandler(handler) {
+    this.getElement().querySelector(`.film-details__inner`)
+      .addEventListener(`keydown`, handler);
   }
 }
