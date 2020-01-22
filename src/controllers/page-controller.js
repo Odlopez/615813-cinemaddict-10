@@ -29,8 +29,9 @@ const isNotIndex = (films, sortProperty) => !films.filter((item) => item[sortPro
 const isEqualRating = (films, sortProperty) => films.every((item, i, arr) => item[sortProperty] === (arr[i + 1] ? arr[i + 1][sortProperty] : item[sortProperty]));
 
 export default class PageController {
-  constructor(container, movies) {
+  constructor(container, movies, api) {
     this._container = container;
+    this._api = api;
 
     this._movies = movies;
     this._films = [];
@@ -84,7 +85,7 @@ export default class PageController {
     const portionfilms = films.slice(this._counter, this._counter + CARD_QUANTITY);
 
     portionfilms.forEach((item) => {
-      const filmController = new MovieController(filmsListContainer, this._onDataChange, this._onViewChange);
+      const filmController = new MovieController(filmsListContainer, this._onDataChange, this._onViewChange, this._api);
       filmController.render(item);
       this._renderedFilms.push(filmController);
     });
@@ -163,7 +164,7 @@ export default class PageController {
 
       switch (sortValue) {
         case `date`:
-          sortedFilms.sort((a, b) => b.date - a.date);
+          sortedFilms.sort((a, b) => +new Date(b.date) - +new Date(a.date));
           break;
         case `rating`:
           sortedFilms.sort((a, b) => b.rating - a.rating);

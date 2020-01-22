@@ -73,15 +73,14 @@ const getMiddleContainerMarkup = (film) => {
  */
 const getCommentsMarkup = (comments) => {
   return comments.map((item) => {
-    const {text, emotion, author, date} = item;
-
+    const {comment, emotion, author, date} = item;
 
     return `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
           <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji">
         </span>
         <div>
-          <p class="film-details__comment-text">${text}</p>
+          <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">${moment(date).format(`YYYY/MM/DD HH:MM`)}</span>
@@ -90,7 +89,8 @@ const getCommentsMarkup = (comments) => {
         </div>
       </li>
     `;
-  });
+  })
+  .join(``);
 
 };
 
@@ -101,7 +101,7 @@ const getCommentsMarkup = (comments) => {
  * @return {String} строковое представление разметки развернутой карточки фильма
  */
 const getFilmDetailsMarkup = (film) => {
-  const {poster, age, name, rating, director, writers, actors, country, genres, description, watchlist, history, favorites, comments} = film;
+  const {poster, age, name, alternativeName, rating, director, writers, actors, country, genres, description, watchlist, history, favorites, comments} = film;
   let {date, duration} = film;
 
   return `<section class="film-details">
@@ -112,7 +112,7 @@ const getFilmDetailsMarkup = (film) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="images/posters/${poster}" alt="">
+              <img class="film-details__poster-img" src="${poster}" alt="">
 
               <p class="film-details__age">${age}+</p>
             </div>
@@ -121,7 +121,7 @@ const getFilmDetailsMarkup = (film) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${name}</h3>
-                  <p class="film-details__title-original">Original: ${name}</p>
+                  <p class="film-details__title-original">Original: ${alternativeName}</p>
                 </div>
 
                 <div class="film-details__rating">

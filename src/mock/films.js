@@ -100,11 +100,12 @@ export const getFilms = () => {
   return {
     id: getRandomID(),
     name: cloneFilmNames.pop(),
+    alternativeName: cloneFilmNames.pop(),
     director: `Anthony Mann`,
     writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`],
     actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`],
     country: `Uganda`,
-    poster: getRandomElement(posters),
+    poster: `images/posters/${getRandomElement(posters)}`,
     rating: (getRandomNumber(MAX_RATING * 10, 10) / 10).toFixed(1),
     date: getRandomDate(),
     duration: getRandomNumber(MAX_FILM_DURATION, MIN_FILM_DURATION),
