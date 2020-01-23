@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions} from '../constants';
+import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings} from '../constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -122,4 +122,20 @@ export const getNewCommentId = (comments) => {
   }
 
   return +comments[comments.length - 1][`id`] + 1;
+};
+
+/**
+ * Преобразовывает количество просмотренных фильмов в строковое представление рейтинга пользователя
+ *
+ * @param {Number} filmsQuantity количество просмотренных фильмов
+ * @return {String} строковое представление рейтинга пользователя
+ */
+export const getStringRating = (filmsQuantity) => {
+  for (const [key, value] of ratings) {
+    if (filmsQuantity <= +key) {
+      return value;
+    }
+  }
+
+  return ``;
 };
