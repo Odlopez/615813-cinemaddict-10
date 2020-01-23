@@ -29,7 +29,7 @@ export default class Api {
   }
 
   /**
-   * Производит загрузку данных по переданным параметрам
+   * Производит загрузку данных на/с сервера по переданным параметрам
    *
    * @param {Object} param0
    * @return {Promise}
@@ -64,5 +64,23 @@ export default class Api {
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then((data) => Film.parseFilms(data));
+  }
+
+  /**
+   * Обновляет данные фильма
+   *
+   * @param {String} id
+   * @param {Object} data
+   * @return {Promise}
+   */
+  updateFilm(id, data) {
+    return this._load({
+      url: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(Film.parseFilm);
   }
 }

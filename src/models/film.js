@@ -10,7 +10,7 @@ export default class Film {
     this.writers = data.film_info.writers;
     this.actors = data.film_info.actors;
     this.date = data.film_info.release.date;
-    this.country = data.film_info.release.country;
+    this.country = data.film_info.release.release_country;
     this.duration = data.film_info.runtime;
     this.genres = data.film_info.genre;
     this.description = data.film_info.description;

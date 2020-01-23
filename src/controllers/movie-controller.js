@@ -1,6 +1,7 @@
 import {render, remove} from '../utils/render';
 import {getNewCommentId} from '../utils/common';
 import Card from '../components/card';
+import Film from '../models/film.js';
 import FilmDetails from '../components/film-details';
 import {ESC_KEYCODE} from '../constants';
 import he from 'he';
@@ -101,8 +102,9 @@ export default class MovieController {
   }
 
   _onWatchListChange() {
-    this._onDataChange(this, Object.assign({}, this.film, {
-      watchlist: !this.film.watchlist
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      watchlist: !this.film.watchlist,
+      watchingDate: !this.film.watchlist ? new Date().toISOString() : new Date(0).toISOString()
     }));
 
     if (this._getActiveFilterName() === `watchlist`) {
@@ -111,8 +113,9 @@ export default class MovieController {
   }
 
   _onWatchedChange() {
-    this._onDataChange(this, Object.assign({}, this.film, {
-      history: !this.film.history
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      history: !this.film.history,
+      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
     }));
 
     if (this._getActiveFilterName() === `history`) {
@@ -121,8 +124,9 @@ export default class MovieController {
   }
 
   _onFavoriteChange() {
-    this._onDataChange(this, Object.assign({}, this.film, {
-      favorites: !this.film.favorites
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      favorites: !this.film.favorites,
+      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
     }));
 
     if (this._getActiveFilterName() === `favorites`) {
@@ -257,10 +261,12 @@ export default class MovieController {
     remove(oldCard);
 
     if (oldPopup) {
-      this.createPopup();
+      this.createPopup()
+      .then(() => oldPopup.getElement().replaceWith(this._popup.getElement()))
+      .then(() => remove(oldPopup));
 
-      oldPopup.getElement().replaceWith(this._popup.getElement());
-      remove(oldPopup);
+      // oldPopup.getElement().replaceWith(this._popup.getElement());
+      // remove(oldPopup);
     }
   }
 }

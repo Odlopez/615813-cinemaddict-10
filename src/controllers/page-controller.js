@@ -155,12 +155,11 @@ export default class PageController {
   /**
    * Возвращает callback для обработчика клика по кнопке сортировки
    *
-   * @param {Array} films массив объектов с данными о фильмах
    * @return {Function} функция-callback для обработчика клика по кнопке сортировки
    */
-  _getSortFilmsCallback(films) {
+  _getSortFilmsCallback() {
     return (sortValue) => {
-      let sortedFilms = films.slice();
+      let sortedFilms = this._movies.getFilms().slice();
 
       switch (sortValue) {
         case `date`:
@@ -181,9 +180,12 @@ export default class PageController {
    * @param {Object} newData новые данные фильма
    */
   _onDataChange(filmController, newData) {
-    this._movies.refreshFilm(newData.id, newData);
-
-    filmController.rerender(newData);
+    this._api.updateFilm(newData.id, newData)
+      .then((newFilm) => {
+        this._movies.refreshFilm(newData.id, newFilm);
+        return newFilm;
+      })
+      .then((newFilm) => filmController.rerender(newFilm));
   }
 
   /**
@@ -234,7 +236,7 @@ export default class PageController {
     remove(this._Sort);
     render(this._container, this._Sort.getElement(), `beforebegin`);
 
-    this._Sort.setHandler(this._getSortFilmsCallback(this._movies.getFilms()));
+    this._Sort.setHandler(this._getSortFilmsCallback());
 
     this._renderFilms(this._movies.getFilms());
   }
@@ -267,6 +269,7 @@ export default class PageController {
     this._filmList = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
+
     remove(this._ReadMoreButton);
   }
 }
