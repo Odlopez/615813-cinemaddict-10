@@ -29,8 +29,9 @@ const isNotIndex = (films, sortProperty) => !films.filter((item) => item[sortPro
 const isEqualRating = (films, sortProperty) => films.every((item, i, arr) => item[sortProperty] === (arr[i + 1] ? arr[i + 1][sortProperty] : item[sortProperty]));
 
 export default class PageController {
-  constructor(container, movies) {
+  constructor(container, movies, api) {
     this._container = container;
+    this._api = api;
 
     this._movies = movies;
     this._films = [];
@@ -84,7 +85,7 @@ export default class PageController {
     const portionfilms = films.slice(this._counter, this._counter + CARD_QUANTITY);
 
     portionfilms.forEach((item) => {
-      const filmController = new MovieController(filmsListContainer, this._onDataChange, this._onViewChange);
+      const filmController = new MovieController(filmsListContainer, this._onDataChange, this._onViewChange, this._api);
       filmController.render(item);
       this._renderedFilms.push(filmController);
     });
@@ -154,16 +155,15 @@ export default class PageController {
   /**
    * Возвращает callback для обработчика клика по кнопке сортировки
    *
-   * @param {Array} films массив объектов с данными о фильмах
    * @return {Function} функция-callback для обработчика клика по кнопке сортировки
    */
-  _getSortFilmsCallback(films) {
+  _getSortFilmsCallback() {
     return (sortValue) => {
-      let sortedFilms = films.slice();
+      let sortedFilms = this._movies.getFilms().slice();
 
       switch (sortValue) {
         case `date`:
-          sortedFilms.sort((a, b) => b.date - a.date);
+          sortedFilms.sort((a, b) => +new Date(b.date) - +new Date(a.date));
           break;
         case `rating`:
           sortedFilms.sort((a, b) => b.rating - a.rating);
@@ -180,9 +180,12 @@ export default class PageController {
    * @param {Object} newData новые данные фильма
    */
   _onDataChange(filmController, newData) {
-    this._movies.refreshFilm(newData.id, newData);
-
-    filmController.rerender(newData);
+    this._api.updateFilm(newData.id, newData)
+      .then((newFilm) => {
+        this._movies.refreshFilm(newData.id, newFilm);
+        return newFilm;
+      })
+      .then((newFilm) => filmController.rerender(newFilm));
   }
 
   /**
@@ -233,7 +236,7 @@ export default class PageController {
     remove(this._Sort);
     render(this._container, this._Sort.getElement(), `beforebegin`);
 
-    this._Sort.setHandler(this._getSortFilmsCallback(this._movies.getFilms()));
+    this._Sort.setHandler(this._getSortFilmsCallback());
 
     this._renderFilms(this._movies.getFilms());
   }
@@ -266,6 +269,7 @@ export default class PageController {
     this._filmList = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
+
     remove(this._ReadMoreButton);
   }
 }

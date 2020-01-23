@@ -1,12 +1,15 @@
 import {render, remove} from '../utils/render';
+import {getNewCommentId} from '../utils/common';
 import Card from '../components/card';
+import Film from '../models/film.js';
 import FilmDetails from '../components/film-details';
 import {ESC_KEYCODE} from '../constants';
 import he from 'he';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
+    this._api = api;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
@@ -69,11 +72,27 @@ export default class MovieController {
 
   /**
    * Создает попап с подробной информацией о фильме
+   * @return {Promise}
    */
   createPopup() {
-    this._popup = new FilmDetails(this.film);
+    if (this.film.comments) {
+      return new Promise((resolve) => {
+        this._popup = new FilmDetails(this.film);
 
-    this._subscribePopupOnEvents();
+        this._subscribePopupOnEvents();
+        resolve();
+      });
+    }
+
+    return this._api.getComment(this.film.id)
+      .then((comments) => {
+        this.film.comments = comments;
+      })
+      .then(() => {
+        this._popup = new FilmDetails(this.film);
+
+        this._subscribePopupOnEvents();
+      });
   }
 
   _getActiveFilterName() {
@@ -83,9 +102,9 @@ export default class MovieController {
   }
 
   _onWatchListChange() {
-    this._onDataChange(this, Object.assign({}, this.film, {
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
       watchlist: !this.film.watchlist,
-      history: false
+      watchingDate: !this.film.watchlist ? new Date().toISOString() : new Date(0).toISOString()
     }));
 
     if (this._getActiveFilterName() === `watchlist`) {
@@ -94,8 +113,9 @@ export default class MovieController {
   }
 
   _onWatchedChange() {
-    this._onDataChange(this, Object.assign({}, this.film, {
-      history: !this.film.history
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      history: !this.film.history,
+      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
     }));
 
     if (this._getActiveFilterName() === `history`) {
@@ -104,8 +124,9 @@ export default class MovieController {
   }
 
   _onFavoriteChange() {
-    this._onDataChange(this, Object.assign({}, this.film, {
-      favorites: !this.film.favorites
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      favorites: !this.film.favorites,
+      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
     }));
 
     if (this._getActiveFilterName() === `favorites`) {
@@ -165,8 +186,8 @@ export default class MovieController {
 
         if (comment && emoji) {
           this.film.comments.unshift({
-            id: Symbol(),
-            text: he.encode(comment),
+            id: getNewCommentId(this.film.comments).toString(),
+            comment: he.encode(comment),
             emotion: emoji,
             author: `John Doe`,
             date: new Date()
@@ -185,9 +206,9 @@ export default class MovieController {
     this._card.setOpenDetailstHandler(() => {
       this._onViewChange();
 
-      this.createPopup();
-
-      render(this._container, this._popup.getElement());
+      this.createPopup().then(() => {
+        render(this._container, this._popup.getElement());
+      });
     });
 
     this._card.setAddWatchlistButtonHandler((evt) => {
@@ -240,10 +261,12 @@ export default class MovieController {
     remove(oldCard);
 
     if (oldPopup) {
-      this.createPopup();
+      this.createPopup()
+      .then(() => oldPopup.getElement().replaceWith(this._popup.getElement()))
+      .then(() => remove(oldPopup));
 
-      oldPopup.getElement().replaceWith(this._popup.getElement());
-      remove(oldPopup);
+      // oldPopup.getElement().replaceWith(this._popup.getElement());
+      // remove(oldPopup);
     }
   }
 }

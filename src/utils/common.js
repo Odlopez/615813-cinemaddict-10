@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION} from '../constants';
+import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings} from '../constants';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -49,7 +49,7 @@ export const sortFilms = (films, name) => {
   let sorter;
 
   switch (name) {
-    case `comments`:
+    case extraListsOptions.commentedProperty:
       sorter = (a, b) => b[name].length - a[name].length;
       break;
     default:
@@ -108,4 +108,34 @@ export const countsFilmAsCategory = (films, category) => {
     hoarder += item[category] ? 1 : 0;
     return hoarder;
   }, 0);
+};
+
+/**
+ * Генерирует номер следующего комментария
+ *
+ * @param {Array} comments
+ * @return {Number} айди следующего комментария
+ */
+export const getNewCommentId = (comments) => {
+  if (!comments.length) {
+    return 1;
+  }
+
+  return +comments[comments.length - 1][`id`] + 1;
+};
+
+/**
+ * Преобразовывает количество просмотренных фильмов в строковое представление рейтинга пользователя
+ *
+ * @param {Number} filmsQuantity количество просмотренных фильмов
+ * @return {String} строковое представление рейтинга пользователя
+ */
+export const getStringRating = (filmsQuantity) => {
+  for (const [key, value] of ratings) {
+    if (filmsQuantity <= +key) {
+      return value;
+    }
+  }
+
+  return ``;
 };

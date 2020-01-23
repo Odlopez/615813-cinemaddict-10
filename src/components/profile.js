@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {getStringRating} from '../mock/profile';
+import {getStringRating} from '../utils/common';
 
 /**
  * Возвращает разметку профиля со строковым представлением рейтинга

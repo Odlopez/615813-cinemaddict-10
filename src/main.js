@@ -6,22 +6,20 @@ import Movies from './models/movies';
 import {renderFooterStatistic} from './footer';
 import {getRandomNumber} from './utils/common';
 import {render} from './utils/render';
-import {filmNames} from './constants';
+import Api from './api';
 
-import {getFilms} from './mock/films';
+const AUTHORIZATION = `Basic odlopez2399`;
+const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
-const films = new Array(filmNames.length).fill(``).map(getFilms);
-const movies = new Movies(films);
-window.movies = movies;
-
+const api = new Api(END_POINT, AUTHORIZATION);
 const userWatchedFilmsQuantity = getRandomNumber(30);
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 
-const drawIndexMarkup = () => {
+const drawIndexMarkup = (movies, films, apiInstance) => {
   const contentBlock = new ContentBlock().getElement();
-  const pageController = new PageController(contentBlock, movies);
+  const pageController = new PageController(contentBlock, movies, apiInstance);
   const menuController = new MenuController(main, movies);
 
   render(header, new Profile(userWatchedFilmsQuantity).getElement());
@@ -31,5 +29,10 @@ const drawIndexMarkup = () => {
   pageController.render(films);
 };
 
-drawIndexMarkup();
-renderFooterStatistic(films);
+api.getFilms()
+  .then((films) => {
+    const movies = new Movies(films);
+
+    drawIndexMarkup(movies, films, api);
+    renderFooterStatistic(films);
+  });
