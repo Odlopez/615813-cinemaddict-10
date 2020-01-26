@@ -16,6 +16,8 @@ export default class MovieController {
     this._card = null;
     this._popup = null;
     this._film = null;
+    this._isCommentFormBlocked = false;
+    this._isRatingFormBlocked = false;
 
     this.onCloseButtonClick = this.onCloseButtonClick.bind(this);
     this.onDocumentKeydown = this.onDocumentKeydown.bind(this);
@@ -48,6 +50,7 @@ export default class MovieController {
   setDefaultView() {
     if (this._popup) {
       this.closePopup();
+      this._defrostAnimation();
     }
   }
 
@@ -56,6 +59,7 @@ export default class MovieController {
    */
   onCloseButtonClick() {
     this.closePopup();
+    this._defrostAnimation();
   }
 
   /**
@@ -67,6 +71,7 @@ export default class MovieController {
   onDocumentKeydown(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       this.closePopup();
+      this._defrostAnimation();
     }
   }
 
@@ -95,12 +100,65 @@ export default class MovieController {
       });
   }
 
+  /**
+   * Блокирует форму отправки комментария
+   */
+  _blockForm() {
+    this._isCommentFormBlocked = true;
+  }
+
+  /**
+   * Блокирует форму рейтинга
+   */
+  _blockRating() {
+    this._isRatingFormBlocked = true;
+  }
+
+  /**
+   * Деблокирует форму отправки комментария
+   */
+  _deblockForm() {
+    const form = this._popup.getElement().querySelector(`.film-details__inner`);
+    const textarea = this._popup.getElement().querySelector(`.film-details__comment-input`);
+
+    form.classList.remove(`shake`);
+    textarea.style.outline = ``;
+
+    this._isCommentFormBlocked = false;
+  }
+
+  /**
+   * Деблокирует форму рейтинга
+   */
+  _deblockRating() {
+    this._isRatingFormBlocked = false;
+  }
+
+  /**
+   * Вешает на форму класс "ошибки"
+   */
+  _setInvalidClassForm() {
+    const form = this._popup.getElement().querySelector(`.film-details__inner`);
+    const textarea = this._popup.getElement().querySelector(`.film-details__comment-input`);
+
+    form.classList.add(`shake`);
+    textarea.style.outline = `2px solid red`;
+  }
+
+  /**
+   * Возвращает название активного фильтра
+   *
+   * @return {String}
+   */
   _getActiveFilterName() {
     const activeFilterLink = document.querySelector(`.main-navigation__item--active`);
 
     return activeFilterLink ? activeFilterLink.href.match(/#.{1,}/)[0].slice(1) : ``;
   }
 
+  /**
+   * Функция-callback для изменения сосотяния 'watchlist' фильма
+   */
   _onWatchListChange() {
     this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
       watchlist: !this.film.watchlist,
@@ -112,17 +170,28 @@ export default class MovieController {
     }
   }
 
+  /**
+   * Функция-callback для изменения сосотяния 'watched' фильма
+   */
   _onWatchedChange() {
+    this._blockRating();
+
     this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
       history: !this.film.history,
-      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
-    }));
+      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString(),
+      score: this.film.history ? 0 : this.film.score
+    }))
+    .then(() => this._deblockRating())
+    .catch(() => this._deblockRating());
 
     if (this._getActiveFilterName() === `history`) {
       remove(this._card);
     }
   }
 
+  /**
+   * Функция-callback для изменения сосотяния 'favorites' фильма
+   */
   _onFavoriteChange() {
     this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
       favorites: !this.film.favorites,
@@ -132,6 +201,40 @@ export default class MovieController {
     if (this._getActiveFilterName() === `favorites`) {
       remove(this._card);
     }
+  }
+
+  /**
+   * Функция-callback для изменения рейтинга фильма
+   *
+   * @param {Number} rating значение рейтинга инпута
+   */
+  _onRatingChange(rating) {
+    if (this._isRatingFormBlocked) {
+      return;
+    }
+
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      score: rating
+    }))
+    .then(() => this._deblockRating())
+    .catch(() => this._deblockRating());
+  }
+
+  /**
+   * Создает объект с данными нового комментария
+   *
+   * @param {String} comment текст комментария
+   * @param {String} emoji эмоция
+   * @return {Object} объект с данными нового комментария
+   */
+  _createCommentData(comment, emoji) {
+    return {
+      id: getNewCommentId(this.film.comments).toString(),
+      comment: he.encode(comment),
+      emotion: emoji,
+      author: `John Doe`,
+      date: new Date()
+    };
   }
 
   /**
@@ -158,10 +261,26 @@ export default class MovieController {
       this._onFavoriteChange();
     });
 
+    this._popup.setRatingButtonHandler((evt) => {
+      evt.preventDefault();
+
+      this._onRatingChange(+evt.target.value);
+    });
+
+    this._popup.setRatingResetHandler((evt) => {
+      evt.preventDefault();
+
+      this._onRatingChange(0);
+    });
+
     this._popup.setDeleteCommentButtonHandler((evt) => {
       evt.preventDefault();
 
-      const comment = evt.target.closest(`.film-details__comment`);
+      if (this._isCommentFormBlocked) {
+        return;
+      }
+
+      const comment = evt.target.closest(`.film-details__comment-delete`);
 
       if (!comment) {
         return;
@@ -170,33 +289,65 @@ export default class MovieController {
       const index = Array.from(this._popup.getElement().querySelectorAll(`.film-details__comment-delete`))
         .findIndex((item) => item === comment);
 
-      this.film.comments.splice(index, 1);
+      this._blockForm();
 
-      this._onDataChange(this, Object.assign({}, this.film));
-
-      comment.remove();
+      this._api.deleteComment(this.film.comments[index].id)
+        .then(() => {
+          this._deblockForm();
+          this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film));
+          comment.remove();
+        }).catch(() => {
+          this._deblockForm();
+          this._setInvalidClassForm();
+        });
     });
 
     this._popup.setFormHandler((evt) => {
       if (evt.ctrlKey && evt.key === `Enter`) {
         const data = new Map(new FormData(evt.target.form));
-
         const comment = data.get(`comment`);
         const emoji = data.get(`comment-emoji`);
 
-        if (comment && emoji) {
-          this.film.comments.unshift({
-            id: getNewCommentId(this.film.comments).toString(),
-            comment: he.encode(comment),
-            emotion: emoji,
-            author: `John Doe`,
-            date: new Date()
-          });
+        this._deblockForm();
 
-          this._onDataChange(this, Object.assign({}, this.film));
+        if (comment && emoji) {
+          this._api.setComment(this.film.id, this._createCommentData(comment, emoji))
+            .then((film) => this._onDataChange(this, new Film(film.movie)))
+            .catch(() => {
+              this._setInvalidClassForm();
+            });
         }
       }
     });
+  }
+
+  /**
+   * Удаляет анимацию появляения попапа
+   */
+  _freezeAnimation() {
+    if (document.querySelector(`.freeze-style-js`)) {
+      return;
+    }
+
+    const freezeStyle = document.createElement(`style`);
+
+    freezeStyle.classList.add(`freeze-style-js`);
+    freezeStyle.innerHTML = `.film-details{animation:none;}`;
+
+    setTimeout(() => {
+      document.body.appendChild(freezeStyle);
+    }, 300);
+  }
+
+  /**
+   * Возвращает анимацию появления попапа
+   */
+  _defrostAnimation() {
+    const freezeStyle = document.querySelector(`.freeze-style-js`);
+
+    if (freezeStyle) {
+      freezeStyle.remove();
+    }
   }
 
   /**
@@ -208,6 +359,8 @@ export default class MovieController {
 
       this.createPopup().then(() => {
         render(this._container, this._popup.getElement());
+
+        this._freezeAnimation();
       });
     });
 
@@ -264,9 +417,6 @@ export default class MovieController {
       this.createPopup()
       .then(() => oldPopup.getElement().replaceWith(this._popup.getElement()))
       .then(() => remove(oldPopup));
-
-      // oldPopup.getElement().replaceWith(this._popup.getElement());
-      // remove(oldPopup);
     }
   }
 }

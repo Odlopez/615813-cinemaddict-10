@@ -294,6 +294,34 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   /**
+   * Вешает обработчик события input на кнопки оценки рейтинга
+   *
+   * @param {Function} handler
+   */
+  setRatingButtonHandler(handler) {
+    const ratingInputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+
+    if (ratingInputs.length) {
+      ratingInputs.forEach((item) => {
+        item.addEventListener(`input`, handler);
+      });
+    }
+  }
+
+  /**
+   * Вешает обработчик клика на кнопке сброса рейтинга
+   *
+   * @param {Function} handler
+   */
+  setRatingResetHandler(handler) {
+    const ratingReset = this.getElement().querySelector(`.film-details__watched-reset`);
+
+    if (ratingReset) {
+      ratingReset.addEventListener(`click`, handler);
+    }
+  }
+
+  /**
    * Вешает обработчик сабмита на форму
    *
    * @param {Function} handler

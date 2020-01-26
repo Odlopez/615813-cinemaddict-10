@@ -52,7 +52,10 @@ export default class Api {
    */
   getComment(commentId) {
     return this._load({url: `comments/${commentId}`})
-      .then((response) => response.json());
+      .then((response) => response.json())
+      .catch((err) => {
+        throw err;
+      });
   }
 
   /**
@@ -63,7 +66,10 @@ export default class Api {
   getFilms() {
     return this._load({url: `movies`})
       .then((response) => response.json())
-      .then((data) => Film.parseFilms(data));
+      .then((data) => Film.parseFilms(data))
+      .catch((err) => {
+        throw err;
+      });
   }
 
   /**
@@ -81,6 +87,33 @@ export default class Api {
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
-      .then(Film.parseFilm);
+      .then(Film.parseFilm)
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  /**
+   * Загружает новый комментарий на сервер
+   *
+   * @param {String} filmId
+   * @param {Object} data
+   * @return {Promise}
+   */
+  setComment(filmId, data) {
+    return this._load({
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  deleteComment(commentId) {
+    return this._load({url: `comments/${commentId}`, method: Method.DELETE});
   }
 }
