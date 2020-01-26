@@ -1,7 +1,6 @@
 import AbstractComponent from './abstract-smart-component';
 import {transformFilmDuration, getDateString} from '../utils/common';
 import moment from 'moment';
-import { ratings } from '../constants';
 
 /**
  * Возвращает разметку блока оценки фильма, если фильм просмотрен
