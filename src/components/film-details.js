@@ -1,6 +1,7 @@
 import AbstractComponent from './abstract-smart-component';
 import {transformFilmDuration, getDateString} from '../utils/common';
 import moment from 'moment';
+import { ratings } from '../constants';
 
 /**
  * Возвращает разметку блока оценки фильма, если фильм просмотрен
@@ -291,6 +292,34 @@ export default class FilmDetails extends AbstractComponent {
     this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((item) => {
       item.addEventListener(`click`, handler);
     });
+  }
+
+  /**
+   * Вешает обработчик события input на кнопки оценки рейтинга
+   *
+   * @param {Function} handler
+   */
+  setRatingButtonHandler(handler) {
+    const ratingInputs = this.getElement().querySelectorAll(`.film-details__user-rating-input`);
+
+    if (ratingInputs.length) {
+      ratingInputs.forEach((item) => {
+        item.addEventListener(`input`, handler);
+      });
+    }
+  }
+
+  /**
+   * Вешает обработчик клика на кнопке сброса рейтинга
+   *
+   * @param {Function} handler
+   */
+  setRatingResetHandler(handler) {
+    const ratingReset = this.getElement().querySelector(`.film-details__watched-reset`);
+
+    if (ratingReset) {
+      ratingReset.addEventListener(`click`, handler);
+    }
   }
 
   /**

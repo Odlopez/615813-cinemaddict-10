@@ -178,9 +178,10 @@ export default class PageController {
    *
    * @param {Object} filmController инстанс класса компонента фильма
    * @param {Object} newData новые данные фильма
+   * @return {Promise}
    */
   _onDataChange(filmController, newData) {
-    this._api.updateFilm(newData.id, newData)
+    return this._api.updateFilm(newData.id, newData)
       .then((newFilm) => {
         this._movies.refreshFilm(newData.id, newFilm);
         return newFilm;
