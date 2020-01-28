@@ -151,7 +151,7 @@ const getGeneralStatisticMarkup = (films) => {
       <h4 class="statistic__item-title">Top genre</h4>
       <p class="statistic__item-text">${getTopGenre(films)}</p>
     </li>`;
-}
+};
 
 /**
  * Генерирует разметку блока статистики
