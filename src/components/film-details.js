@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-smart-component';
+import AbstractComponent from './abstract-component';
 import {transformFilmDuration, getDateString} from '../utils/common';
 import moment from 'moment';
 
