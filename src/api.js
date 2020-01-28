@@ -66,7 +66,7 @@ export default class Api {
   getFilms() {
     return this._load({url: `movies`})
       .then((response) => response.json())
-      .then((data) => Film.parseFilms(data))
+      .then((films) => Film.parseFilms(films))
       .catch((err) => {
         throw err;
       });
@@ -76,14 +76,14 @@ export default class Api {
    * Обновляет данные фильма
    *
    * @param {String} id
-   * @param {Object} data
+   * @param {Object} film
    * @return {Promise}
    */
-  updateFilm(id, data) {
+  updateFilm(id, film) {
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
+      body: JSON.stringify(film.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
@@ -97,14 +97,14 @@ export default class Api {
    * Загружает новый комментарий на сервер
    *
    * @param {String} filmId
-   * @param {Object} data
+   * @param {Object} comment
    * @return {Promise}
    */
-  setComment(filmId, data) {
+  setComment(filmId, comment) {
     return this._load({
       url: `comments/${filmId}`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(comment),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
