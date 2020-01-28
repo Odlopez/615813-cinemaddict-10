@@ -155,7 +155,7 @@ const getFilmDetailsMarkup = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genres.length === 1 ? `Genre` : `Genres`}</td>
+                  <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     ${genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
                 </tr>

@@ -139,7 +139,7 @@ export default class PageController {
     * Генерирует разметку компонента "extra-list"
     *
     * @param {Array} films массив объектов с данными о фильмах
-    * @param {*} sortProperty имя свойства, по которому сортируются карточки фильмов
+    * @param {String} sortProperty имя свойства, по которому сортируются карточки фильмов
     * @return {Array} отсортированный массив с данными о фильмах
     */
   _getFilmsExtraListData(films, sortProperty) {

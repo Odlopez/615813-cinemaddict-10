@@ -58,6 +58,7 @@ export default class Film {
   }
 
   static parseFilms(data) {
+    console.log(data)
     return data.map(Film.parseFilm);
   }
 
