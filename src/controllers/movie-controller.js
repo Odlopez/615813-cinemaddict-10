@@ -178,7 +178,7 @@ export default class MovieController {
 
     this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
       history: !this.film.history,
-      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString(),
+      watchingDate: !this.film.history ? new Date().toISOString() : new Date(0).toISOString(),
       score: this.film.history ? 0 : this.film.score
     }))
     .then(() => this._deblockRating())

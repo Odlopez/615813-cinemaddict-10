@@ -53,4 +53,13 @@ export default class Menu extends AbstractComponent {
 
     filterLinks.forEach((item) => item.addEventListener(`click`, handler));
   }
+
+  /**
+   * Вешает на кнопку "Stats" обработчик клика
+   *
+   * @param {Function} handler
+   */
+  setAdditionalHandler(handler) {
+    this._element.querySelector(`.main-navigation__item--additional`).addEventListener(`click`, handler);
+  }
 }

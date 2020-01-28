@@ -3,7 +3,7 @@ import AbstractComponent from './abstract-component.js';
 /**
  * Генерирует разметку основного списка карточек фильмов
  *
- * @return {String} строкое представление разметки списка фильмов
+ * @return {String} строковое представление разметки списка фильмов
  */
 const getFilmsListMarkup = () => `
     <section class="films-list">
@@ -17,7 +17,7 @@ export default class FilmsList extends AbstractComponent {
   /**
    * Генерирует разметку основного списка карточек фильмов
    *
-   * @return {String} строкое представление разметки списка фильмов
+   * @return {String} строковое представление разметки списка фильмов
    */
   getTemplate() {
     return getFilmsListMarkup();

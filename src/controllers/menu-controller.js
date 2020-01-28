@@ -59,5 +59,11 @@ export default class MenuController {
 
       this._movies.setFilterValue(filterValue);
     });
+
+    menuInstance.setAdditionalHandler((evt) => {
+      evt.preventDefault();
+
+      this._container.closest(`.main`).classList.toggle(`main--statistic`);
+    });
   }
 }

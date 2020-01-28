@@ -1100,3 +1100,13 @@ button {
 .shake {
   animation: shake 0.6s;
 }
+.main--statistic .sort,
+.main--statistic .films {
+  display: none;
+}
+.main--statistic .statistic {
+  display: initial;
+}
+.statistic {
+  display: none;
+}
