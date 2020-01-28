@@ -1,5 +1,6 @@
 import {render, remove} from '../utils/render';
 import Sort from '../components/sort';
+import Statistic from '../components/statistic';
 import FilmsExtraList from '../components/films-extra-list';
 import FilmsList from '../components/films-list';
 import MovieController from './movie-controller';
@@ -39,8 +40,9 @@ export default class PageController {
     this._filmList = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
-    this._ReadMoreButton = new ReadMoreButton();
-    this._Sort = new Sort();
+    this._readMoreButton = new ReadMoreButton();
+    this._sort = new Sort();
+    this._statistic = new Statistic(movies);
     this._filterLinks = null;
     this._renderedFilms = [];
 
@@ -186,7 +188,10 @@ export default class PageController {
         this._movies.refreshFilm(newData.id, newFilm);
         return newFilm;
       })
-      .then((newFilm) => filmController.rerender(newFilm));
+      .then((newFilm) => {
+        this._statistic.rerender();
+        filmController.rerender(newFilm);
+      });
   }
 
   /**
@@ -217,15 +222,15 @@ export default class PageController {
     this.renderExtraLists();
 
     if (films.length > CARD_QUANTITY) {
-      this._ReadMoreButton.getElement().addEventListener(`click`, () => {
+      this._readMoreButton.getElement().addEventListener(`click`, () => {
         this._renderPortionOfCards(films);
 
         if (this._counter >= films.length) {
-          remove(this._ReadMoreButton);
+          remove(this._readMoreButton);
         }
       });
 
-      render(this._filmList, this._ReadMoreButton.getElement());
+      render(this._filmList, this._readMoreButton.getElement());
     }
   }
 
@@ -234,10 +239,18 @@ export default class PageController {
   *
   */
   render() {
-    remove(this._Sort);
-    render(this._container, this._Sort.getElement(), `beforebegin`);
+    this._statistic.renderChart();
+    this._statistic.setHandler((evt) => {
+      evt.preventDefault();
 
-    this._Sort.setHandler(this._getSortFilmsCallback());
+      this._statistic.rerender();
+    });
+
+    remove(this._sort);
+    render(this._container, this._sort.getElement(), `beforebegin`);
+    render(this._container, this._statistic.getElement(), `beforebegin`);
+
+    this._sort.setHandler(this._getSortFilmsCallback());
 
     this._renderFilms(this._movies.getFilms());
   }
@@ -271,6 +284,6 @@ export default class PageController {
     this._ratedExtraList = null;
     this._commentedExtraList = null;
 
-    remove(this._ReadMoreButton);
+    remove(this._readMoreButton);
   }
 }

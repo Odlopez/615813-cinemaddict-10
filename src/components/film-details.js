@@ -235,7 +235,7 @@ export default class FilmDetails extends AbstractComponent {
   /**
    * Генерирует разметку развернутой карточки фильма
    *
-   * @return {String} строкое представление разметки карточки фильма
+   * @return {String} строковое представление разметки карточки фильма
    */
   getTemplate() {
     return getFilmDetailsMarkup(this._film);

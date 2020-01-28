@@ -24,7 +24,7 @@ export default class FilmsExtraList extends AbstractComponent {
   /**
    * Генерирует разметку дополнительного списка карточек фильмов
    *
-   * @return {String} строкое представление разметки дополнительного списка фильмов
+   * @return {String} строковое представление разметки дополнительного списка фильмов
    */
   getTemplate() {
     return getFilmsExtraListMarkup(this._title);

@@ -43,7 +43,7 @@ export default class Card extends AbstractComponent {
   /**
    * Генерирует разметку карточки фильма
    *
-   * @return {String} строкое представление разметки карточки фильма
+   * @return {String} строковое представление разметки карточки фильма
    */
   getTemplate() {
     return getCardComponent(this._film);
