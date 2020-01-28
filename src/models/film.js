@@ -46,7 +46,7 @@ export default class Film {
         'personal_rating': this.score,
         'watchlist': this.watchlist,
         'already_watched': this.history,
-        'watching_date': this.watchingDate,
+        'watching_date': this.watchingDate ? this.watchingDate : new Date(0).toISOString(),
         'favorite': this.favorites
       },
       'comments': this.commentsId

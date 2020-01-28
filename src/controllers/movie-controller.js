@@ -232,7 +232,6 @@ export default class MovieController {
       id: getNewCommentId(this.film.comments).toString(),
       comment: he.encode(comment),
       emotion: emoji,
-      author: `John Doe`,
       date: new Date()
     };
   }

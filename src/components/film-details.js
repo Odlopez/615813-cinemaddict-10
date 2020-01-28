@@ -1,5 +1,5 @@
-import AbstractComponent from './abstract-smart-component';
-import {transformFilmDuration, getDateString} from '../utils/common';
+import AbstractComponent from './abstract-component';
+import {transformFilmDuration} from '../utils/common';
 import moment from 'moment';
 
 /**
@@ -144,7 +144,7 @@ const getFilmDetailsMarkup = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${getDateString(date)}</td>
+                  <td class="film-details__cell">${moment(date).format(`DD MMMM YYYY`)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -155,7 +155,7 @@ const getFilmDetailsMarkup = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genres.length === 1 ? `Genre` : `Genres`}</td>
+                  <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     ${genres.map((item) => `<span class="film-details__genre">${item}</span>`).join(``)}
                 </tr>

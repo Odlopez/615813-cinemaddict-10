@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings} from '../constants';
 
 /**
@@ -9,14 +8,6 @@ import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings} fr
  * @return {Number} сгенерированное случайное число
  */
 export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
-
-/**
- * Возврщает случайный элемент массива
- *
- * @param {*} array массив, из которого необходимо извлечь случайный элемент
- * @return {any} случайный элемент массива
- */
-export const getRandomElement = (array) => array[getRandomNumber(array.length - 1)];
 
 /**
  * Производит "тасование" массива по методу Фишера-Йетса
@@ -70,16 +61,6 @@ export const transformFilmDuration = (duration) => {
   const minutes = duration - hours * MINUTES_PER_HOUR;
 
   return `${hours ? `${hours}h ` : ``}${minutes}m`;
-};
-
-/**
- * Возвращает строковое представление даты фильма
- *
- * @param {Number} dateTime дата в миллисекундах
- * @return {String} дата вида DD Mont-name YYY
- */
-export const getDateString = (dateTime) => {
-  return moment(dateTime).format(`DD MMMM YYYY`);
 };
 
 /**
