@@ -48,25 +48,14 @@ apiWithProvider.getFilms()
   });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
-    }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
-    });
+  navigator.serviceWorker.register(`/sw.js`);
 });
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
 
   if (!apiWithProvider.getSynchronize()) {
-    apiWithProvider.sync()
-      .then(() => {
-        // Действие, в случае успешной синхронизации
-      })
-      .catch(() => {
-        // Действие, в случае ошибки синхронизации
-      });
+    apiWithProvider.sync();
   }
 });
 

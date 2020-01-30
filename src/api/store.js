@@ -36,11 +36,6 @@ export default class Store {
   }
 
   createEmptyComment(filmId) {
-    // const store = this.getAllComments();
-
-    // if (!store || (store && !store[filmId])) {
-    //   this.setComment(filmId, []);
-    // }
     this.setComment(filmId, []);
   }
 
@@ -66,7 +61,5 @@ export default class Store {
 
     this._storage.setItem(this._storeCommentKey, JSON.stringify(Object.assign({}, storeComments)));
     this._storage.setItem(this._storeKey, JSON.stringify(store));
-    setTimeout(() => {
-    }, 0);
   }
 }
