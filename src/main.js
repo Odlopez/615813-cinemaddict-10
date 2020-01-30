@@ -6,12 +6,22 @@ import Movies from './models/movies';
 import {renderFooterStatistic} from './footer';
 import {getRandomNumber} from './utils/common';
 import {render} from './utils/render';
-import Api from './api';
+import Api from './api/index';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
+
+const STORE_PREFIX = `615813-cinemaddict-10-store`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_COMMENT_PREFIX = `615813-cinemaddict-10-comment-store`;
+const STORE_COMMENT_NAME = `${STORE_COMMENT_PREFIX}-${STORE_VER}`;
 
 const AUTHORIZATION = `Basic odlopez2399`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, STORE_COMMENT_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const userWatchedFilmsQuantity = getRandomNumber(30);
 
 const header = document.querySelector(`.header`);
@@ -29,10 +39,26 @@ const drawIndexMarkup = (movies, films, apiInstance) => {
   pageController.render(films);
 };
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     const movies = new Movies(films);
 
-    drawIndexMarkup(movies, films, api);
+    drawIndexMarkup(movies, films, apiWithProvider);
     renderFooterStatistic(films);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  if (!apiWithProvider.getSynchronize()) {
+    apiWithProvider.sync();
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

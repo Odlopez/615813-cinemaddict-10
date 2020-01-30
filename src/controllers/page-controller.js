@@ -103,7 +103,7 @@ export default class PageController {
    */
   _fillsExstraList(container, films) {
     films.forEach((item) => {
-      const filmController = new MovieController(container, this._onDataChange, this._onViewChange);
+      const filmController = new MovieController(container, this._onDataChange, this._onViewChange, this._api);
       filmController.render(item);
       this._renderedFilms.push(filmController);
     });

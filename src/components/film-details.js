@@ -9,7 +9,7 @@ import moment from 'moment';
  * @return {String} строкове представление разметки блока с оценкой фильма
  */
 const getMiddleContainerMarkup = (film) => {
-  const {history, score} = film;
+  const {history, score, poster} = film;
   if (!history) {
     return ``;
   }
@@ -22,7 +22,7 @@ const getMiddleContainerMarkup = (film) => {
 
       <div class="film-details__user-score">
         <div class="film-details__user-rating-poster">
-          <img src="./images/posters/the-great-flamarion.jpg" alt="film-poster" class="film-details__user-rating-img">
+          <img src="${poster}" alt="film-poster" class="film-details__user-rating-img">
         </div>
 
         <section class="film-details__user-rating-inner">
