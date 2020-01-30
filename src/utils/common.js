@@ -1,4 +1,6 @@
-import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings} from '../constants';
+import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings, commentDates} from '../constants';
+import moment from 'moment';
+import numberToWords from 'number-to-words';
 
 /**
  * Возвращает случайное число в заданном диапазоне
@@ -119,4 +121,23 @@ export const getStringRating = (filmsQuantity) => {
   }
 
   return ``;
+};
+
+/**
+ * Возвращает строковое представление даты для комментария
+ *
+ * @param {String} date
+ * @return {String}
+ */
+export const getCommentDate = (date) => {
+  window.moment = moment;
+  for (const [key, value] of commentDates) {
+    if (moment(date).isBetween(moment().subtract(value.size, value.magnitude), moment())) {
+      return key;
+    }
+  }
+
+  const fromNow = moment(date).fromNow();
+
+  return `a ${numberToWords.toWords(parseInt(fromNow, 10))} ${fromNow.slice(fromNow.indexOf(` `))}`;
 };
