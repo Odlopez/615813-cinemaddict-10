@@ -1,4 +1,4 @@
-import Film from './models/film';
+import Film from '../models/film';
 
 const Method = {
   GET: `GET`,
@@ -47,11 +47,11 @@ export default class Api {
   /**
    * Производит загрузку комментария по переданному айди
    *
-   * @param {String} commentId
+   * @param {String} filmId
    * @return {Promise}
    */
-  getComment(commentId) {
-    return this._load({url: `comments/${commentId}`})
+  getComments(filmId) {
+    return this._load({url: `comments/${filmId}`})
       .then((response) => response.json())
       .catch((err) => {
         throw err;
@@ -113,7 +113,29 @@ export default class Api {
       });
   }
 
+  /**
+   * Удаляет комментарий
+   *
+   * @param {String} commentId
+   * @return {Promise}
+   */
   deleteComment(commentId) {
     return this._load({url: `comments/${commentId}`, method: Method.DELETE});
+  }
+
+  /**
+   * Синхронизирует данные с сервером
+   *
+   * @param {Array} data
+   * @return {Promise}
+   */
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json());
   }
 }

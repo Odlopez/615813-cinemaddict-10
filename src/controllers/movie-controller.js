@@ -80,7 +80,7 @@ export default class MovieController {
    * @return {Promise}
    */
   createPopup() {
-    if (this.film.comments) {
+    if (this.film.comments.length === this.film.commentsId.length) {
       return new Promise((resolve) => {
         this._popup = new FilmDetails(this.film);
 
@@ -89,7 +89,7 @@ export default class MovieController {
       });
     }
 
-    return this._api.getComment(this.film.id)
+    return this._api.getComments(this.film.id)
       .then((comments) => {
         this.film.comments = comments;
       })
@@ -232,6 +232,7 @@ export default class MovieController {
       id: getNewCommentId(this.film.comments).toString(),
       comment: he.encode(comment),
       emotion: emoji,
+      author: `Nevada O'Reilly`,
       date: new Date()
     };
   }
@@ -288,9 +289,13 @@ export default class MovieController {
       const index = Array.from(this._popup.getElement().querySelectorAll(`.film-details__comment-delete`))
         .findIndex((item) => item === comment);
 
+      if (index !== -1) {
+        this.film.commentsId.splice(index, 1);
+      }
+
       this._blockForm();
 
-      this._api.deleteComment(this.film.comments[index].id)
+      this._api.deleteComment(this.film.comments[index].id, this.film.id)
         .then(() => {
           this._deblockForm();
           this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film));
@@ -311,10 +316,8 @@ export default class MovieController {
 
         if (comment && emoji) {
           this._api.setComment(this.film.id, this._createCommentData(comment, emoji))
-            .then((film) => this._onDataChange(this, new Film(film.movie)))
-            .catch(() => {
-              this._setInvalidClassForm();
-            });
+            .then((film) => this._onDataChange(this, new Film(film.movie || film)))
+            .catch(() => this._setInvalidClassForm());
         }
       }
     });

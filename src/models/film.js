@@ -15,6 +15,7 @@ export default class Film {
     this.genres = data.film_info.genre;
     this.description = data.film_info.description;
     this.commentsId = data.comments;
+    this.comments = [];
     this.watchlist = data.user_details.watchlist;
     this.history = data.user_details.already_watched;
     this.favorites = data.user_details.favorite;

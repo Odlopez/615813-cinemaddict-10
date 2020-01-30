@@ -99,7 +99,7 @@ export const countsFilmAsCategory = (films, category) => {
  */
 export const getNewCommentId = (comments) => {
   if (!comments.length) {
-    return `1`;
+    return `${+new Date()}`;
   }
 
   return +comments[comments.length - 1][`id`] + 1;
