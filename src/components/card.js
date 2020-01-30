@@ -1,5 +1,7 @@
 import {transformFilmDuration, cropDescription} from '../utils/common';
 import AbstractComponent from './abstract-component.js';
+import {DEBOUNCE_TIMEOUT} from '../constants';
+import debounce from 'lodash/debounce';
 
 /**
  * Генерирует разметку карточки фильма в зависимсоти от переданных данных
@@ -68,7 +70,7 @@ export default class Card extends AbstractComponent {
    */
   setAddWatchlistButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -78,7 +80,7 @@ export default class Card extends AbstractComponent {
    */
   setAlreadyWatchedButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -88,6 +90,6 @@ export default class Card extends AbstractComponent {
    */
   setAddFavoriteButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 }

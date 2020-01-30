@@ -1,6 +1,8 @@
 import AbstractComponent from './abstract-component';
-import {transformFilmDuration} from '../utils/common';
+import {transformFilmDuration, getCommentDate} from '../utils/common';
+import {DEBOUNCE_TIMEOUT} from '../constants';
 import moment from 'moment';
+import debounce from 'lodash/debounce';
 
 /**
  * Возвращает разметку блока оценки фильма, если фильм просмотрен
@@ -83,7 +85,7 @@ const getCommentsMarkup = (comments) => {
           <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">${moment(date).format(`YYYY/MM/DD HH:MM`)}</span>
+            <span class="film-details__comment-day">${getCommentDate(date)}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>
@@ -259,7 +261,7 @@ export default class FilmDetails extends AbstractComponent {
    */
   setAddWatchlistButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -269,7 +271,7 @@ export default class FilmDetails extends AbstractComponent {
    */
   setAlreadyWatchedButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -279,7 +281,7 @@ export default class FilmDetails extends AbstractComponent {
    */
   setAddFavoriteButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
