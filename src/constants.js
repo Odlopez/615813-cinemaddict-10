@@ -1,10 +1,10 @@
-export const ratings = new Map([
+const ratings = new Map([
   [0, ``],
   [10, `novice`],
   [20, `fan`],
   [Infinity, `movie buff`]
 ]);
-export const commentDates = new Map([
+const commentDates = new Map([
   [`now`, {
     size: 1,
     magnitude: `minutes`,
@@ -26,17 +26,31 @@ export const commentDates = new Map([
     magnitude: `days`,
   }],
 ]);
-export const CARD_QUANTITY = 5;
-export const EXTRA_CARD_QUANTITY = 2;
-export const MINUTES_PER_HOUR = 60;
-export const extraListsOptions = {
+const CARD_QUANTITY = 5;
+const EXTRA_CARD_QUANTITY = 2;
+const MINUTES_PER_HOUR = 60;
+const extraListsOptions = {
   ratedTitle: `Top rated`,
   ratedProperty: `rating`,
   commentedTitle: `Most commented`,
   commentedProperty: `commentsId`,
 };
-export const filterNames = [`Watchlist`, `History`, `Favorites`];
-export const emotionNames = [`smile`, `sleeping`, `puke`, `angry`];
-export const MAX_LENGTH_DESCRIPTION = 139;
-export const ESC_KEYCODE = 27;
-export const DEBOUNCE_TIMEOUT = 500;
+const filterNames = [`Watchlist`, `History`, `Favorites`];
+const emotionNames = [`smile`, `sleeping`, `puke`, `angry`];
+const MAX_LENGTH_DESCRIPTION = 139;
+const ESC_KEYCODE = 27;
+const DEBOUNCE_TIMEOUT = 500;
+
+export {
+  ratings,
+  commentDates,
+  CARD_QUANTITY,
+  EXTRA_CARD_QUANTITY,
+  MINUTES_PER_HOUR,
+  extraListsOptions,
+  filterNames,
+  emotionNames,
+  MAX_LENGTH_DESCRIPTION,
+  ESC_KEYCODE,
+  DEBOUNCE_TIMEOUT
+};

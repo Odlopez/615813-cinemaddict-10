@@ -9,7 +9,7 @@ import numberToWords from 'number-to-words';
  * @param {Number} min минимальная граница диапазона
  * @return {Number} сгенерированное случайное число
  */
-export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
+const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() * (max + 1 - min));
 
 /**
  * Производит "тасование" массива по методу Фишера-Йетса
@@ -18,7 +18,7 @@ export const getRandomNumber = (max, min = 0) => Math.floor(min + Math.random() 
  * @param {Boolean} isGetNewArray флаг, указывающий создавать ли новый массив или сортировать исходный
  * @return {Array} перетасованный массив
  */
-export const sortFisherYates = (arr, isGetNewArray) => {
+const sortFisherYates = (arr, isGetNewArray) => {
   if (isGetNewArray) {
     arr = arr.slice();
   }
@@ -38,7 +38,7 @@ export const sortFisherYates = (arr, isGetNewArray) => {
  * @param {String} name имя свойство, по которому происходит сортировка
  * @return {Array} отсортированный по переданному свойству массив с данными карточек фильмов
  */
-export const sortFilms = (films, name) => {
+const sortFilms = (films, name) => {
   let sorter;
 
   switch (name) {
@@ -58,7 +58,7 @@ export const sortFilms = (films, name) => {
  * @param {Number} duration длительность фильма в минутах
  * @return {String} строка с продожительностью фильма вида {x}h {y}m
  */
-export const transformFilmDuration = (duration) => {
+const transformFilmDuration = (duration) => {
   const hours = Math.floor(duration / MINUTES_PER_HOUR);
   const minutes = duration - hours * MINUTES_PER_HOUR;
 
@@ -71,7 +71,7 @@ export const transformFilmDuration = (duration) => {
  * @param {String} description строка с описанием фильма
  * @return {String} строка с описанием фильма допустимой длины
  */
-export const cropDescription = (description) => {
+const cropDescription = (description) => {
   if (description.length > MAX_LENGTH_DESCRIPTION) {
     description = `${description.substr(0, MAX_LENGTH_DESCRIPTION)}...`;
   }
@@ -86,7 +86,7 @@ export const cropDescription = (description) => {
  * @param {String} category категория, по которой фильтруем данные фильмов
  * @return {Number} количество фильмов соответстующей категории
  */
-export const countsFilmAsCategory = (films, category) => {
+const countsFilmAsCategory = (films, category) => {
   return films.reduce((hoarder, item) => {
     hoarder += item[category] ? 1 : 0;
     return hoarder;
@@ -99,7 +99,7 @@ export const countsFilmAsCategory = (films, category) => {
  * @param {Array} comments
  * @return {Number} айди следующего комментария
  */
-export const getNewCommentId = (comments) => {
+const getNewCommentId = (comments) => {
   if (!comments.length) {
     return `${+new Date()}`;
   }
@@ -113,7 +113,7 @@ export const getNewCommentId = (comments) => {
  * @param {Number} filmsQuantity количество просмотренных фильмов
  * @return {String} строковое представление рейтинга пользователя
  */
-export const getStringRating = (filmsQuantity) => {
+const getStringRating = (filmsQuantity) => {
   for (const [key, value] of ratings) {
     if (filmsQuantity <= +key) {
       return value;
@@ -129,7 +129,7 @@ export const getStringRating = (filmsQuantity) => {
  * @param {String} date
  * @return {String}
  */
-export const getCommentDate = (date) => {
+const getCommentDate = (date) => {
   window.moment = moment;
   for (const [key, value] of commentDates) {
     if (moment(date).isBetween(moment().subtract(value.size, value.magnitude), moment())) {
@@ -140,4 +140,16 @@ export const getCommentDate = (date) => {
   const fromNow = moment(date).fromNow();
 
   return `a ${numberToWords.toWords(parseInt(fromNow, 10))} ${fromNow.slice(fromNow.indexOf(` `))}`;
+};
+
+export {
+  getRandomNumber,
+  sortFisherYates,
+  sortFilms,
+  transformFilmDuration,
+  cropDescription,
+  countsFilmAsCategory,
+  getNewCommentId,
+  getStringRating,
+  getCommentDate
 };
