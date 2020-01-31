@@ -22,7 +22,6 @@ const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const api = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, STORE_COMMENT_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
-const userWatchedFilmsQuantity = getRandomNumber(30);
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
@@ -31,6 +30,7 @@ const drawIndexMarkup = (movies, films, apiInstance) => {
   const contentBlock = new ContentBlock().getElement();
   const pageController = new PageController(contentBlock, movies, apiInstance);
   const menuController = new MenuController(main, movies);
+  const userWatchedFilmsQuantity = films.filter((item) => item.history).length;
 
   render(header, new Profile(userWatchedFilmsQuantity).getElement());
   menuController.render(films);
