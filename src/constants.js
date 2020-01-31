@@ -36,7 +36,6 @@ const extraListsOptions = {
   commentedProperty: `commentsId`,
 };
 const filterNames = [`Watchlist`, `History`, `Favorites`];
-const emotionNames = [`smile`, `sleeping`, `puke`, `angry`];
 const MAX_LENGTH_DESCRIPTION = 139;
 const ESC_KEYCODE = 27;
 const DEBOUNCE_TIMEOUT = 500;
@@ -49,7 +48,6 @@ export {
   MINUTES_PER_HOUR,
   extraListsOptions,
   filterNames,
-  emotionNames,
   MAX_LENGTH_DESCRIPTION,
   ESC_KEYCODE,
   DEBOUNCE_TIMEOUT
