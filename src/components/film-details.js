@@ -102,8 +102,7 @@ const getCommentsMarkup = (comments) => {
  * @return {String} строковое представление разметки развернутой карточки фильма
  */
 const getFilmDetailsMarkup = (film) => {
-  const {poster, age, name, alternativeName, rating, director, writers, actors, country, genres, description, watchlist, history, favorites, comments} = film;
-  let {date, duration} = film;
+  const {poster, age, name, alternativeName, rating, director, writers, actors, country, genres, description, watchlist, history, favorites, comments, date, duration} = film;
 
   return `<section class="film-details">
       <form class="film-details__inner" action="" method="get">

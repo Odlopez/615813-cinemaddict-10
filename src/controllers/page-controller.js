@@ -161,7 +161,7 @@ export default class PageController {
    */
   _getSortFilmsCallback() {
     return (sortValue) => {
-      let sortedFilms = this._movies.getFilms().slice();
+      const sortedFilms = this._movies.getFilms().slice();
 
       switch (sortValue) {
         case `date`:
