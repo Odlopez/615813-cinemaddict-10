@@ -1,7 +1,6 @@
-import {transformFilmDuration, cropDescription} from '../utils/common';
+import {transformFilmDuration, cropDescription, debounce} from '../utils/common';
 import AbstractComponent from './abstract-component.js';
 import {DEBOUNCE_TIMEOUT} from '../constants';
-import debounce from 'lodash/debounce';
 
 /**
  * Генерирует разметку карточки фильма в зависимсоти от переданных данных
@@ -43,6 +42,31 @@ export default class Card extends AbstractComponent {
   }
 
   /**
+   * Декоратор debounce
+   *
+   * @param {Function} handler
+   * @param {Number} timeout
+   * @return {Function}
+   */
+  _debounce(handler, timeout) {
+    let isCooldown = false;
+
+    return (evt) => {
+      if (isCooldown) {
+        return;
+      }
+
+      handler(evt);
+
+      isCooldown = true;
+
+      setTimeout(() => {
+        isCooldown = false;
+      }, timeout);
+    };
+  }
+
+  /**
    * Генерирует разметку карточки фильма
    *
    * @return {String} строковое представление разметки карточки фильма
@@ -70,7 +94,7 @@ export default class Card extends AbstractComponent {
    */
   setAddWatchlistButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
-      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+      .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -80,7 +104,7 @@ export default class Card extends AbstractComponent {
    */
   setAlreadyWatchedButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+      .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -90,6 +114,6 @@ export default class Card extends AbstractComponent {
    */
   setAddFavoriteButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
-      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+      .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 }

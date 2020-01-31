@@ -2,7 +2,6 @@ import AbstractComponent from './abstract-component';
 import {transformFilmDuration, getCommentDate} from '../utils/common';
 import {DEBOUNCE_TIMEOUT} from '../constants';
 import moment from 'moment';
-import debounce from 'lodash/debounce';
 
 /**
  * Возвращает разметку блока оценки фильма, если фильм просмотрен
@@ -235,6 +234,32 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   /**
+   * Декоратор debounce
+   *
+   * @param {Function} handler
+   * @param {Number} timeout
+   * @return {Function}
+   */
+  _debounce(handler, timeout) {
+    let isCooldown = false;
+
+    return (evt) => {
+      if (isCooldown) {
+        return;
+      }
+
+      handler(evt);
+
+      isCooldown = true;
+
+      setTimeout(() => {
+        isCooldown = false;
+      }, timeout);
+    };
+  }
+
+
+  /**
    * Генерирует разметку развернутой карточки фильма
    *
    * @return {String} строковое представление разметки карточки фильма
@@ -261,7 +286,7 @@ export default class FilmDetails extends AbstractComponent {
    */
   setAddWatchlistButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+      .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -271,7 +296,7 @@ export default class FilmDetails extends AbstractComponent {
    */
   setAlreadyWatchedButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+      .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
@@ -281,7 +306,7 @@ export default class FilmDetails extends AbstractComponent {
    */
   setAddFavoriteButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, debounce(handler, DEBOUNCE_TIMEOUT));
+      .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
   /**
