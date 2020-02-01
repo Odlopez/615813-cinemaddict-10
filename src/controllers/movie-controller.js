@@ -19,8 +19,8 @@ export default class MovieController {
     this._isCommentFormBlocked = false;
     this._isRatingFormBlocked = false;
 
-    this.onCloseButtonClick = this.onCloseButtonClick.bind(this);
-    this.onDocumentKeydown = this.onDocumentKeydown.bind(this);
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onDocumentKeydown = this._onDocumentKeydown.bind(this);
   }
 
   get film() {
@@ -32,54 +32,27 @@ export default class MovieController {
   }
 
   /**
-   * Закрывает попап-блок с подробной информацией о фильме
-   */
-  closePopup() {
-    const closeButton = this._popup.getElement().querySelector(`.film-details__close-btn`);
-
-    closeButton.removeEventListener(`click`, this.onCloseButtonClick);
-    document.removeEventListener(`keydown`, this.onDocumentKeydown);
-
-    remove(this._popup);
-    this._popup = null;
-  }
-
-  /**
-   * Устанавливает дефолтное положение карточки
-   */
-  setDefaultView() {
-    if (this._popup) {
-      this.closePopup();
-      this._defrostAnimation();
-    }
-  }
-
-  /**
-   * Функция-callback обработчика клика по кнопке закрытия попапа
-   */
-  onCloseButtonClick() {
-    this.closePopup();
-    this._defrostAnimation();
-  }
-
-  /**
-   * Функция-callback обработчика нажатия клавиши (esc) на клавиатуре
-   * закрывает попап-блок с подробной информацией о фильме
+   * Создает объект с данными нового комментария
    *
-   * @param {Event} evt
+   * @param {String} comment текст комментария
+   * @param {String} emoji эмоция
+   * @return {Object} объект с данными нового комментария
    */
-  onDocumentKeydown(evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      this.closePopup();
-      this._defrostAnimation();
-    }
+  _createCommentData(comment, emoji) {
+    return {
+      id: getNewCommentId(this.film.comments).toString(),
+      comment: he.encode(comment),
+      emotion: emoji,
+      author: `Nevada O'Reilly`,
+      date: new Date()
+    };
   }
 
   /**
    * Создает попап с подробной информацией о фильме
    * @return {Promise}
    */
-  createPopup() {
+  _createPopup() {
     if (this.film.comments.length === this.film.commentsId.length) {
       return new Promise((resolve) => {
         this._popup = new FilmDetails(this.film);
@@ -98,6 +71,16 @@ export default class MovieController {
 
         this._subscribePopupOnEvents();
       });
+  }
+
+  /**
+   * Закрывает попап-блок с подробной информацией о фильме
+   */
+  _closePopup() {
+    document.removeEventListener(`keydown`, this._onDocumentKeydown);
+
+    remove(this._popup);
+    this._popup = null;
   }
 
   /**
@@ -135,6 +118,35 @@ export default class MovieController {
   }
 
   /**
+   * Удаляет анимацию появляения попапа
+   */
+  _freezeAnimation() {
+    if (document.querySelector(`.freeze-style-js`)) {
+      return;
+    }
+
+    const freezeStyle = document.createElement(`style`);
+
+    freezeStyle.classList.add(`freeze-style-js`);
+    freezeStyle.innerHTML = `.film-details{animation:none;}`;
+
+    setTimeout(() => {
+      document.body.appendChild(freezeStyle);
+    }, 300);
+  }
+
+  /**
+   * Возвращает анимацию появления попапа
+   */
+  _defrostAnimation() {
+    const freezeStyle = document.querySelector(`.freeze-style-js`);
+
+    if (freezeStyle) {
+      freezeStyle.remove();
+    }
+  }
+
+  /**
    * Вешает на форму класс "ошибки"
    */
   _setInvalidClassForm() {
@@ -154,6 +166,27 @@ export default class MovieController {
     const activeFilterLink = document.querySelector(`.main-navigation__item--active`);
 
     return activeFilterLink ? activeFilterLink.href.match(/#.{1,}/)[0].slice(1) : ``;
+  }
+
+  /**
+   * Функция-callback обработчика клика по кнопке закрытия попапа
+   */
+  _onCloseButtonClick() {
+    this._closePopup();
+    this._defrostAnimation();
+  }
+
+  /**
+   * Функция-callback обработчика нажатия клавиши (esc) на клавиатуре
+   * закрывает попап-блок с подробной информацией о фильме
+   *
+   * @param {Event} evt
+   */
+  _onDocumentKeydown(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      this._closePopup();
+      this._defrostAnimation();
+    }
   }
 
   /**
@@ -221,27 +254,10 @@ export default class MovieController {
   }
 
   /**
-   * Создает объект с данными нового комментария
-   *
-   * @param {String} comment текст комментария
-   * @param {String} emoji эмоция
-   * @return {Object} объект с данными нового комментария
-   */
-  _createCommentData(comment, emoji) {
-    return {
-      id: getNewCommentId(this.film.comments).toString(),
-      comment: he.encode(comment),
-      emotion: emoji,
-      author: `Nevada O'Reilly`,
-      date: new Date()
-    };
-  }
-
-  /**
    * Вешает на элемент попапа обработчики событий
    */
   _subscribePopupOnEvents() {
-    this._popup.setCloseHandler(this.onCloseButtonClick, this.onDocumentKeydown);
+    this._popup.setCloseHandler(this._onCloseButtonClick, this._onDocumentKeydown);
 
     this._popup.setAddWatchlistButtonHandler((evt) => {
       evt.preventDefault();
@@ -324,42 +340,13 @@ export default class MovieController {
   }
 
   /**
-   * Удаляет анимацию появляения попапа
-   */
-  _freezeAnimation() {
-    if (document.querySelector(`.freeze-style-js`)) {
-      return;
-    }
-
-    const freezeStyle = document.createElement(`style`);
-
-    freezeStyle.classList.add(`freeze-style-js`);
-    freezeStyle.innerHTML = `.film-details{animation:none;}`;
-
-    setTimeout(() => {
-      document.body.appendChild(freezeStyle);
-    }, 300);
-  }
-
-  /**
-   * Возвращает анимацию появления попапа
-   */
-  _defrostAnimation() {
-    const freezeStyle = document.querySelector(`.freeze-style-js`);
-
-    if (freezeStyle) {
-      freezeStyle.remove();
-    }
-  }
-
-  /**
    * Вешает на элемент карточки необходимые обработчики события
    */
   _subscribeCardOnEvents() {
     this._card.setOpenDetailstHandler(() => {
       this._onViewChange();
 
-      this.createPopup().then(() => {
+      this._createPopup().then(() => {
         render(this._container, this._popup.getElement());
 
         this._freezeAnimation();
@@ -383,6 +370,16 @@ export default class MovieController {
 
       this._onFavoriteChange();
     });
+  }
+
+  /**
+   * Устанавливает дефолтное положение карточки
+   */
+  setDefaultView() {
+    if (this._popup) {
+      this._closePopup();
+      this._defrostAnimation();
+    }
   }
 
   /**
@@ -416,7 +413,7 @@ export default class MovieController {
     remove(oldCard);
 
     if (oldPopup) {
-      this.createPopup()
+      this._createPopup()
       .then(() => oldPopup.getElement().replaceWith(this._popup.getElement()))
       .then(() => remove(oldPopup));
     }

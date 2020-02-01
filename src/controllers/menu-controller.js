@@ -8,9 +8,9 @@ export default class MenuController {
     this._container = container;
     this._movies = movies;
 
-    this.updatFilmQuantity = this.updatFilmQuantity.bind(this);
+    this._updatFilmQuantity = this._updatFilmQuantity.bind(this);
 
-    this._movies.setDataChangeHandler(this.updatFilmQuantity);
+    this._movies.setDataChangeHandler(this._updatFilmQuantity);
   }
 
   /**
@@ -27,7 +27,7 @@ export default class MenuController {
   /**
    * Обновляет количество фильмов в соответствующих категориях фильтра
    */
-  updatFilmQuantity() {
+  _updatFilmQuantity() {
     filterNames.forEach((item) => {
       const activeLink = document.querySelector(`.main-navigation__item[href="#${item.toLocaleLowerCase()}"]`);
 
