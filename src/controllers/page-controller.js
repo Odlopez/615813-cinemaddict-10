@@ -49,10 +49,10 @@ export default class PageController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this.render = this.render.bind(this);
-    this.renderExtraLists = this.renderExtraLists.bind(this);
+    this._renderExtraLists = this._renderExtraLists.bind(this);
 
     this._movies.setFilterChangeHandler(this.render);
-    this._movies.setDataChangeHandler(this.renderExtraLists);
+    this._movies.setDataChangeHandler(this._renderExtraLists);
   }
 
   get films() {
@@ -110,32 +110,6 @@ export default class PageController {
   }
 
   /**
-   * Отрисовываем дополнительные блоки с карточками фильмов
-   */
-  renderExtraLists() {
-    this._clearExtraLists();
-
-    this._ratedExtraList = new FilmsExtraList(ratedTitle).getElement();
-    this._commentedExtraList = new FilmsExtraList(commentedTitle).getElement();
-
-    const ratedFilms = this._getFilmsExtraListData(this._movies.getFilms(), ratedProperty);
-    const commentedFilms = this._getFilmsExtraListData(this._movies.getFilms(), commentedProperty);
-    const ratedContainer = this._ratedExtraList.querySelector(`.films-list__container`);
-    const commentedContainer = this._commentedExtraList.querySelector(`.films-list__container`);
-
-    render(this._container, this._ratedExtraList);
-    render(this._container, this._commentedExtraList);
-
-    if (ratedFilms.length) {
-      this._fillsExstraList(ratedContainer, ratedFilms);
-    }
-
-    if (commentedFilms.length) {
-      this._fillsExstraList(commentedContainer, commentedFilms);
-    }
-  }
-
-  /**
     * Генерирует разметку компонента "extra-list"
     *
     * @param {Array} films массив объектов с данными о фильмах
@@ -176,31 +150,29 @@ export default class PageController {
   }
 
   /**
-   * Перерисовывает карточки при изменении данных фильма
-   *
-   * @param {Object} filmController инстанс класса компонента фильма
-   * @param {Object} newData новые данные фильма
-   * @return {Promise}
+   * Отрисовываем дополнительные блоки с карточками фильмов
    */
-  _onDataChange(filmController, newData) {
-    return this._api.updateFilm(newData.id, newData)
-      .then((newFilm) => {
-        this._movies.refreshFilm(newData.id, newFilm);
-        return newFilm;
-      })
-      .then((newFilm) => {
-        this._statistic.rerender();
-        filmController.rerender(newFilm);
-      });
-  }
+  _renderExtraLists() {
+    this._clearExtraLists();
 
-  /**
-   * Вызывает у всех инстансов класса фильма метод setDefaultView при открытии попапа
-   */
-  _onViewChange() {
-    this._renderedFilms.forEach((item) => {
-      item.setDefaultView();
-    });
+    this._ratedExtraList = new FilmsExtraList(ratedTitle).getElement();
+    this._commentedExtraList = new FilmsExtraList(commentedTitle).getElement();
+
+    const ratedFilms = this._getFilmsExtraListData(this._movies.getFilms(), ratedProperty);
+    const commentedFilms = this._getFilmsExtraListData(this._movies.getFilms(), commentedProperty);
+    const ratedContainer = this._ratedExtraList.querySelector(`.films-list__container`);
+    const commentedContainer = this._commentedExtraList.querySelector(`.films-list__container`);
+
+    render(this._container, this._ratedExtraList);
+    render(this._container, this._commentedExtraList);
+
+    if (ratedFilms.length) {
+      this._fillsExstraList(ratedContainer, ratedFilms);
+    }
+
+    if (commentedFilms.length) {
+      this._fillsExstraList(commentedContainer, commentedFilms);
+    }
   }
 
   /**
@@ -219,7 +191,7 @@ export default class PageController {
 
     this._renderEmptyList();
     this._renderPortionOfCards(films);
-    this.renderExtraLists();
+    this._renderExtraLists();
 
     if (films.length > CARD_QUANTITY) {
       this._readMoreButton.getElement().addEventListener(`click`, () => {
@@ -232,27 +204,6 @@ export default class PageController {
 
       render(this._filmList, this._readMoreButton.getElement());
     }
-  }
-
-  /**
-  * Перерисовываем в основном блоке весь соответствующий контент
-  *
-  */
-  render() {
-    this._statistic.renderChart();
-    this._statistic.setHandler((evt) => {
-      evt.preventDefault();
-
-      this._statistic.rerender();
-    });
-
-    remove(this._sort);
-    render(this._container, this._sort.getElement(), `beforebegin`);
-    render(this._container, this._statistic.getElement(), `beforebegin`);
-
-    this._sort.setHandler(this._getSortFilmsCallback());
-
-    this._renderFilms(this._movies.getFilms());
   }
 
   /**
@@ -285,5 +236,54 @@ export default class PageController {
     this._commentedExtraList = null;
 
     remove(this._readMoreButton);
+  }
+
+  /**
+   * Перерисовывает карточки при изменении данных фильма
+   *
+   * @param {Object} filmController инстанс класса компонента фильма
+   * @param {Object} newData новые данные фильма
+   * @return {Promise}
+   */
+  _onDataChange(filmController, newData) {
+    return this._api.updateFilm(newData.id, newData)
+      .then((newFilm) => {
+        this._movies.refreshFilm(newData.id, newFilm);
+        return newFilm;
+      })
+      .then((newFilm) => {
+        this._statistic.rerender();
+        filmController.rerender(newFilm);
+      });
+  }
+
+  /**
+   * Вызывает у всех инстансов класса фильма метод setDefaultView при открытии попапа
+   */
+  _onViewChange() {
+    this._renderedFilms.forEach((item) => {
+      item.setDefaultView();
+    });
+  }
+
+  /**
+  * Перерисовываем в основном блоке весь соответствующий контент
+  *
+  */
+  render() {
+    this._statistic.renderChart();
+    this._statistic.setHandler((evt) => {
+      evt.preventDefault();
+
+      this._statistic.rerender();
+    });
+
+    remove(this._sort);
+    render(this._container, this._sort.getElement(), `beforebegin`);
+    render(this._container, this._statistic.getElement(), `beforebegin`);
+
+    this._sort.setHandler(this._getSortFilmsCallback());
+
+    this._renderFilms(this._movies.getFilms());
   }
 }
