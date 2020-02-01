@@ -1,12 +1,13 @@
 import {render} from '../utils/render';
 import Menu from '../components/menu';
 import {countsFilmAsCategory} from '../utils/common';
-import {filterNames} from '../constants';
+import {filterNames, MENU_LINK_ACTIVE_CLASS_NAME, MAIN_STATISTIC_CLASS_NAME} from '../constants';
 
 export default class MenuController {
   constructor(container, movies) {
     this._container = container;
     this._movies = movies;
+    this._menu = null;
 
     this._updatFilmQuantity = this._updatFilmQuantity.bind(this);
 
@@ -17,10 +18,9 @@ export default class MenuController {
    * Удаляет со страницы отрисованное меню фильтров
    */
   _removeOldMenu() {
-    const oldMenu = document.querySelector(`.main-navigation`);
-
-    if (oldMenu) {
-      oldMenu.remove();
+    if (this._menu) {
+      this._menu.getElement().remove();
+      this._menu = null;
     }
   }
 
@@ -29,10 +29,10 @@ export default class MenuController {
    */
   _updatFilmQuantity() {
     filterNames.forEach((item) => {
-      const activeLink = document.querySelector(`.main-navigation__item[href="#${item.toLocaleLowerCase()}"]`);
+      const filterLink = this._menu.getFilterLink(item);
 
-      if (activeLink) {
-        activeLink.querySelector(`.main-navigation__item-count`).textContent = countsFilmAsCategory(this._movies.getBaseFilms(), item.toLocaleLowerCase());
+      if (filterLink) {
+        this._menu.getFilterLinkCountElement(filterLink).textContent = countsFilmAsCategory(this._movies.getBaseFilms(), item.toLocaleLowerCase());
       }
     });
   }
@@ -45,25 +45,25 @@ export default class MenuController {
   render(films) {
     this._removeOldMenu();
 
-    const menuInstance = new Menu(films);
-    render(this._container, menuInstance.getElement(), `beforebegin`);
+    this._menu = new Menu(films);
+    render(this._container, this._menu.getElement(), `beforebegin`);
 
-    menuInstance.setHandler((evt) => {
+    this._menu.setHandler((evt) => {
       evt.preventDefault();
 
-      const filterLinks = document.querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`);
+      const filterLinks = this._menu.getAllFilterLinks();
       const filterValue = evt.currentTarget.href.match(/#.{1,}/)[0].slice(1);
 
-      filterLinks.forEach((item) => item.classList.remove(`main-navigation__item--active`));
-      evt.currentTarget.classList.add(`main-navigation__item--active`);
+      filterLinks.forEach((item) => item.classList.remove(MENU_LINK_ACTIVE_CLASS_NAME));
+      evt.currentTarget.classList.add(MENU_LINK_ACTIVE_CLASS_NAME);
 
       this._movies.setFilterValue(filterValue);
     });
 
-    menuInstance.setAdditionalHandler((evt) => {
+    this._menu.setAdditionalHandler((evt) => {
       evt.preventDefault();
 
-      this._container.closest(`.main`).classList.toggle(`main--statistic`);
+      this._container.classList.toggle(MAIN_STATISTIC_CLASS_NAME);
     });
   }
 }

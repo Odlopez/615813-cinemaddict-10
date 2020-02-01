@@ -44,6 +44,35 @@ export default class Menu extends AbstractComponent {
   }
 
   /**
+   * Возвращает Node-элемент фильтер-ссылки
+   *
+   * @param {String} href
+   * @return {HTMLElement}
+   */
+  getFilterLink(href) {
+    return this.getElement().querySelector(`.main-navigation__item[href="#${href.toLocaleLowerCase()}"]`);
+  }
+
+  /**
+   * Возвращает node-коллекцию на все фильтер-ссылки
+   *
+   * @return {HTMLCollection}
+   */
+  getAllFilterLinks() {
+    return this.getElement().querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`);
+  }
+
+  /**
+   * Возвращает Node-элемент количества фильмов в фильтер-ссылке
+   *
+   * @param {HTMLElement} link
+   * @return {HTMLElement}
+   */
+  getFilterLinkCountElement(link) {
+    return link.querySelector(`.main-navigation__item-count`);
+  }
+
+  /**
    * Вешает на ссылки фильтр обработчик клика
    *
    * @param {Function} handler

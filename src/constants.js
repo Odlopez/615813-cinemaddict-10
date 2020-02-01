@@ -44,6 +44,8 @@ const FREEZE_STYLE_CLASS_NAME = `freeze-style-js`;
 const FREEZE_ANIMATION_STYLE = `.film-details{animation:none;}`;
 const INVALID_FORM_CLASS_NAME = `shake`;
 const INVALID_FORM_STYLE = `2px solid red`;
+const MENU_LINK_ACTIVE_CLASS_NAME = `main-navigation__item--active`;
+const MAIN_STATISTIC_CLASS_NAME = `main--statistic`;
 
 export {
   ratings,
@@ -60,5 +62,7 @@ export {
   FREEZE_ANIMATION_STYLE,
   FREEZE_ANIMATION_TIMEOUT,
   INVALID_FORM_CLASS_NAME,
-  INVALID_FORM_STYLE
+  INVALID_FORM_STYLE,
+  MENU_LINK_ACTIVE_CLASS_NAME,
+  MAIN_STATISTIC_CLASS_NAME
 };
