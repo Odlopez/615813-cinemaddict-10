@@ -4,7 +4,6 @@ import PageController from './controllers/page-controller';
 import MenuController from './controllers/menu-controller';
 import Movies from './models/movies';
 import {renderFooterStatistic} from './footer';
-import {getRandomNumber} from './utils/common';
 import {render} from './utils/render';
 import Api from './api/index';
 import Store from './api/store.js';

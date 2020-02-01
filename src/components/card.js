@@ -1,4 +1,4 @@
-import {transformFilmDuration, cropDescription, debounce} from '../utils/common';
+import {transformFilmDuration, cropDescription} from '../utils/common';
 import AbstractComponent from './abstract-component.js';
 import {DEBOUNCE_TIMEOUT} from '../constants';
 
