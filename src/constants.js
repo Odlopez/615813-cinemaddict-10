@@ -39,6 +39,11 @@ const filterNames = [`Watchlist`, `History`, `Favorites`];
 const MAX_LENGTH_DESCRIPTION = 139;
 const ESC_KEYCODE = 27;
 const DEBOUNCE_TIMEOUT = 500;
+const FREEZE_ANIMATION_TIMEOUT = 300;
+const FREEZE_STYLE_CLASS_NAME = `freeze-style-js`;
+const FREEZE_ANIMATION_STYLE = `.film-details{animation:none;}`;
+const INVALID_FORM_CLASS_NAME = `shake`;
+const INVALID_FORM_STYLE = `2px solid red`;
 
 export {
   ratings,
@@ -50,5 +55,10 @@ export {
   filterNames,
   MAX_LENGTH_DESCRIPTION,
   ESC_KEYCODE,
-  DEBOUNCE_TIMEOUT
+  DEBOUNCE_TIMEOUT,
+  FREEZE_STYLE_CLASS_NAME,
+  FREEZE_ANIMATION_STYLE,
+  FREEZE_ANIMATION_TIMEOUT,
+  INVALID_FORM_CLASS_NAME,
+  INVALID_FORM_STYLE
 };

@@ -98,7 +98,7 @@ export default class PageController {
   /**
    * Заполняет дополнительные блоки с карточками контентом
    *
-   * @param {Node} container
+   * @param {HTMLElement} container
    * @param {Array} films массив объектов с данными о фильмах
    */
   _fillsExstraList(container, films) {

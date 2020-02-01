@@ -1,9 +1,9 @@
 import {render, remove} from '../utils/render';
-import {getNewCommentId} from '../utils/common';
+import {getNewCommentId, getActiveFilterName, getFreezeStyleElement} from '../utils/common';
 import Card from '../components/card';
 import Film from '../models/film.js';
 import FilmDetails from '../components/film-details';
-import {ESC_KEYCODE} from '../constants';
+import {ESC_KEYCODE, FREEZE_STYLE_CLASS_NAME, FREEZE_ANIMATION_STYLE, FREEZE_ANIMATION_TIMEOUT, INVALID_FORM_CLASS_NAME, INVALID_FORM_STYLE} from '../constants';
 import he from 'he';
 
 export default class MovieController {
@@ -101,10 +101,10 @@ export default class MovieController {
    * Деблокирует форму отправки комментария
    */
   _deblockForm() {
-    const form = this._popup.getElement().querySelector(`.film-details__inner`);
-    const textarea = this._popup.getElement().querySelector(`.film-details__comment-input`);
+    const form = this._popup.getFormElement();
+    const textarea = this._popup.getTextareaElement();
 
-    form.classList.remove(`shake`);
+    form.classList.remove(INVALID_FORM_CLASS_NAME);
     textarea.style.outline = ``;
 
     this._isCommentFormBlocked = false;
@@ -121,25 +121,25 @@ export default class MovieController {
    * Удаляет анимацию появляения попапа
    */
   _freezeAnimation() {
-    if (document.querySelector(`.freeze-style-js`)) {
+    if (getFreezeStyleElement()) {
       return;
     }
 
     const freezeStyle = document.createElement(`style`);
 
-    freezeStyle.classList.add(`freeze-style-js`);
-    freezeStyle.innerHTML = `.film-details{animation:none;}`;
+    freezeStyle.classList.add(FREEZE_STYLE_CLASS_NAME);
+    freezeStyle.innerHTML = FREEZE_ANIMATION_STYLE;
 
     setTimeout(() => {
       document.body.appendChild(freezeStyle);
-    }, 300);
+    }, FREEZE_ANIMATION_TIMEOUT);
   }
 
   /**
    * Возвращает анимацию появления попапа
    */
   _defrostAnimation() {
-    const freezeStyle = document.querySelector(`.freeze-style-js`);
+    const freezeStyle = getFreezeStyleElement();
 
     if (freezeStyle) {
       freezeStyle.remove();
@@ -150,22 +150,11 @@ export default class MovieController {
    * Вешает на форму класс "ошибки"
    */
   _setInvalidClassForm() {
-    const form = this._popup.getElement().querySelector(`.film-details__inner`);
-    const textarea = this._popup.getElement().querySelector(`.film-details__comment-input`);
+    const form = this._popup.getFormElement();
+    const textarea = this._popup.getTextareaElement();
 
-    form.classList.add(`shake`);
-    textarea.style.outline = `2px solid red`;
-  }
-
-  /**
-   * Возвращает название активного фильтра
-   *
-   * @return {String}
-   */
-  _getActiveFilterName() {
-    const activeFilterLink = document.querySelector(`.main-navigation__item--active`);
-
-    return activeFilterLink ? activeFilterLink.href.match(/#.{1,}/)[0].slice(1) : ``;
+    form.classList.add(INVALID_FORM_CLASS_NAME);
+    textarea.style.outline = INVALID_FORM_STYLE;
   }
 
   /**
@@ -198,7 +187,7 @@ export default class MovieController {
       watchingDate: !this.film.watchlist ? new Date().toISOString() : new Date(0).toISOString()
     }));
 
-    if (this._getActiveFilterName() === `watchlist`) {
+    if (getActiveFilterName() === `watchlist`) {
       remove(this._card);
     }
   }
@@ -217,7 +206,7 @@ export default class MovieController {
     .then(() => this._deblockRating())
     .catch(() => this._deblockRating());
 
-    if (this._getActiveFilterName() === `history`) {
+    if (getActiveFilterName() === `history`) {
       remove(this._card);
     }
   }
@@ -231,7 +220,7 @@ export default class MovieController {
       watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
     }));
 
-    if (this._getActiveFilterName() === `favorites`) {
+    if (getActiveFilterName() === `favorites`) {
       remove(this._card);
     }
   }
@@ -302,7 +291,7 @@ export default class MovieController {
         return;
       }
 
-      const index = Array.from(this._popup.getElement().querySelectorAll(`.film-details__comment-delete`))
+      const index = Array.from(this._popup.getCommentDeleteElements())
         .findIndex((item) => item === comment);
 
       if (index !== -1) {

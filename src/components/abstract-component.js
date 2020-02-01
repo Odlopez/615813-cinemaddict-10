@@ -16,7 +16,7 @@ export default class AbstractComponent {
   /**
    * Возвращает ссылку на node-элемент
    *
-   * @return {Node}
+   * @return {HTMLElement}
    */
   getElement() {
     if (!this._element) {

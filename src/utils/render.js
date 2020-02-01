@@ -1,8 +1,8 @@
 /**
  * Отрисовывает разметку в указанном месте
  *
- * @param {Node} container элемент, относительно которого добавляется разметка
- * @param {Node} element DOM-узел, который вставляем
+ * @param {HTMLElement} container элемент, относительно которого добавляется разметка
+ * @param {HTMLElement} element DOM-узел, который вставляем
  * @param {String} position позиция, в которою будет вставлена разметка
  */
 const render = (container, element, position = `beforeend`) => {
@@ -23,7 +23,7 @@ const remove = (component) => {
  * Создает Node-элемент на основании переданной разметки
  *
  * @param {String} markup
- * @return {Node} DOM-узел
+ * @return {HTMLElement} DOM-узел
  */
 const createElement = (markup) => {
   const container = document.createElement(`div`);

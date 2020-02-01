@@ -1,4 +1,4 @@
-import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings, commentDates} from '../constants';
+import {MINUTES_PER_HOUR, MAX_LENGTH_DESCRIPTION, extraListsOptions, ratings, commentDates, FREEZE_STYLE_CLASS_NAME} from '../constants';
 import moment from 'moment';
 import numberToWords from 'number-to-words';
 
@@ -142,6 +142,21 @@ const getCommentDate = (date) => {
   return `a ${numberToWords.toWords(parseInt(fromNow, 10) || 1)} ${fromNow.slice(fromNow.indexOf(` `))}`;
 };
 
+/**
+ * Возвращает название активного фильтра
+ *
+ * @return {String}
+ */
+const getActiveFilterName = () => {
+  const activeFilterLink = document.querySelector(`.main-navigation__item--active`);
+
+  return activeFilterLink ? activeFilterLink.href.match(/#.{1,}/)[0].slice(1) : ``;
+};
+
+const getFreezeStyleElement = () => {
+  return document.querySelector(`.${FREEZE_STYLE_CLASS_NAME}`);
+};
+
 export {
   getRandomNumber,
   sortFisherYates,
@@ -151,5 +166,7 @@ export {
   countsFilmAsCategory,
   getNewCommentId,
   getStringRating,
-  getCommentDate
+  getCommentDate,
+  getActiveFilterName,
+  getFreezeStyleElement
 };

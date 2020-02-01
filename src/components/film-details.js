@@ -268,6 +268,33 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   /**
+   * Возвращает ссылку на элемент формы
+   *
+   * @return {HTMLElement}
+   */
+  getFormElement() {
+    return this.getElement().querySelector(`.film-details__inner`);
+  }
+
+  /**
+   * Возвращает ссылку на элемент textarea
+   *
+   * @return {HTMLElement}
+   */
+  getTextareaElement() {
+    return this.getElement().querySelector(`.film-details__comment-input`);
+  }
+
+  /**
+   * Возвращает ссылку на node-коллекцию кнопок удаления комментария
+   *
+   * @return {HTMLAllCollection}
+   */
+  getCommentDeleteElements() {
+    return this.getElement().querySelectorAll(`.film-details__comment-delete`);
+  }
+
+  /**
    *
    * @param {Function} cardHandler обработчик клика по кнопке закрытия попапа
    * @param {Function} documentHandler обработчик нажатия клавиши на клавиатуре
