@@ -81,9 +81,9 @@ export default class Card extends AbstractComponent {
    * @param {Function} handler
    */
   setOpenDetailstHandler(handler) {
-    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
-    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
-    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
 
 

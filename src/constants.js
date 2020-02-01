@@ -21,7 +21,7 @@ const commentDates = new Map([
     size: 2,
     magnitude: `hours`,
   }],
-  [`a hour ago`, {
+  [`a few hours ago`, {
     size: 1,
     magnitude: `days`,
   }],

@@ -139,7 +139,7 @@ const getCommentDate = (date) => {
 
   const fromNow = moment(date).fromNow();
 
-  return `a ${numberToWords.toWords(parseInt(fromNow, 10))} ${fromNow.slice(fromNow.indexOf(` `))}`;
+  return `a ${numberToWords.toWords(parseInt(fromNow, 10) || 1)} ${fromNow.slice(fromNow.indexOf(` `))}`;
 };
 
 export {
