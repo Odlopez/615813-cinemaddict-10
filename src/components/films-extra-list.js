@@ -29,4 +29,13 @@ export default class FilmsExtraList extends AbstractComponent {
   getTemplate() {
     return getFilmsExtraListMarkup(this._title);
   }
+
+  /**
+   * Возвращает ссылку на элемент контейнера
+   *
+   * @return {HTMLElement}
+   */
+  getContainer() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
 }

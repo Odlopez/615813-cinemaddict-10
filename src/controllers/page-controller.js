@@ -38,6 +38,7 @@ export default class PageController {
     this._films = [];
     this._counter = 0;
     this._filmList = null;
+    this._filmListContainer = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
     this._readMoreButton = new ReadMoreButton();
@@ -67,7 +68,9 @@ export default class PageController {
    * Отрисовывает блоки-контейнеры для карточек фильмов
    */
   _renderEmptyList() {
-    this._filmList = new FilmsList().getElement();
+    const filmListInstance = new FilmsList();
+    this._filmList = filmListInstance.getElement();
+    this._filmListContainer = filmListInstance.getContainer();
 
     render(this._container, this._filmList);
   }
@@ -82,12 +85,10 @@ export default class PageController {
       return;
     }
 
-    const filmsListContainer = this._filmList.querySelector(`.films-list__container`);
-
     const portionfilms = films.slice(this._counter, this._counter + CARD_QUANTITY);
 
     portionfilms.forEach((item) => {
-      const filmController = new MovieController(filmsListContainer, this._onDataChange, this._onViewChange, this._api);
+      const filmController = new MovieController(this._filmListContainer, this._onDataChange, this._onViewChange, this._api);
       filmController.render(item);
       this._renderedFilms.push(filmController);
     });
@@ -155,13 +156,16 @@ export default class PageController {
   _renderExtraLists() {
     this._clearExtraLists();
 
-    this._ratedExtraList = new FilmsExtraList(ratedTitle).getElement();
-    this._commentedExtraList = new FilmsExtraList(commentedTitle).getElement();
+    const ratedExtraListInstance = new FilmsExtraList(ratedTitle);
+    const commentedExtraListInstance = new FilmsExtraList(commentedTitle);
+
+    this._ratedExtraList = ratedExtraListInstance.getElement();
+    this._commentedExtraList = commentedExtraListInstance.getElement();
 
     const ratedFilms = this._getFilmsExtraListData(this._movies.getFilms(), ratedProperty);
     const commentedFilms = this._getFilmsExtraListData(this._movies.getFilms(), commentedProperty);
-    const ratedContainer = this._ratedExtraList.querySelector(`.films-list__container`);
-    const commentedContainer = this._commentedExtraList.querySelector(`.films-list__container`);
+    const ratedContainer = ratedExtraListInstance.getContainer();
+    const commentedContainer = commentedExtraListInstance.getContainer();
 
     render(this._container, this._ratedExtraList);
     render(this._container, this._commentedExtraList);
@@ -232,6 +236,7 @@ export default class PageController {
     this._renderedFilms = [];
 
     this._filmList = null;
+    this._filmListContainer = null;
     this._ratedExtraList = null;
     this._commentedExtraList = null;
 
