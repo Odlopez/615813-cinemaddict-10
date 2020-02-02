@@ -35,7 +35,6 @@ export default class PageController {
     this._api = api;
 
     this._movies = movies;
-    this._films = [];
     this._counter = 0;
     this._filmList = null;
     this._filmListContainer = null;
@@ -45,10 +44,13 @@ export default class PageController {
     this._sort = new Sort();
     this._statistic = new Statistic(movies);
     this._filterLinks = null;
+    this._sortValue = null;
     this._renderedFilms = [];
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onCardRemove = this._onCardRemove.bind(this);
+    this._getSortFilmsCallback = this._getSortFilmsCallback.bind(this);
     this.render = this.render.bind(this);
     this._renderExtraLists = this._renderExtraLists.bind(this);
 
@@ -56,12 +58,23 @@ export default class PageController {
     this._movies.setDataChangeHandler(this._renderExtraLists);
   }
 
-  get films() {
-    return this._films;
-  }
+  /**
+   * Возвращает массив данных фильтра с учетом сортировки
+   *
+   * @return {Array}
+   */
+  _getFilms() {
+    const sortedFilms = this._movies.getFilms().slice();
 
-  set films(films) {
-    this._films = films;
+    switch (this._sortValue) {
+      case `date`:
+        sortedFilms.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+        break;
+      case `rating`:
+        sortedFilms.sort((a, b) => b.rating - a.rating);
+    }
+
+    return sortedFilms;
   }
 
   /**
@@ -76,6 +89,17 @@ export default class PageController {
   }
 
   /**
+   * Отрисовывает одну карточку
+   *
+   * @param {Object} film данные одного фильма
+   */
+  _renderCard(film) {
+    const filmController = new MovieController(this._filmListContainer, this._onDataChange, this._onViewChange, this._onCardRemove, this._api);
+    filmController.render(film);
+    this._renderedFilms.push(filmController);
+  }
+
+  /**
    * отрисовывает на странице порцию карточек с фильмами
    *
    * @param {Array} films массив объектов с данными о фильмах
@@ -87,11 +111,7 @@ export default class PageController {
 
     const portionfilms = films.slice(this._counter, this._counter + CARD_QUANTITY);
 
-    portionfilms.forEach((item) => {
-      const filmController = new MovieController(this._filmListContainer, this._onDataChange, this._onViewChange, this._api);
-      filmController.render(item);
-      this._renderedFilms.push(filmController);
-    });
+    portionfilms.forEach((item) => this._renderCard(item));
 
     this._counter += CARD_QUANTITY;
   }
@@ -104,7 +124,7 @@ export default class PageController {
    */
   _fillsExstraList(container, films) {
     films.forEach((item) => {
-      const filmController = new MovieController(container, this._onDataChange, this._onViewChange, this._api);
+      const filmController = new MovieController(container, this._onDataChange, this._onViewChange, this._onCardRemove, this._api);
       filmController.render(item);
       this._renderedFilms.push(filmController);
     });
@@ -127,27 +147,6 @@ export default class PageController {
     }
 
     return sortFilms(films, sortProperty).slice(0, EXTRA_CARD_QUANTITY);
-  }
-
-  /**
-   * Возвращает callback для обработчика клика по кнопке сортировки
-   *
-   * @return {Function} функция-callback для обработчика клика по кнопке сортировки
-   */
-  _getSortFilmsCallback() {
-    return (sortValue) => {
-      const sortedFilms = this._movies.getFilms().slice();
-
-      switch (sortValue) {
-        case `date`:
-          sortedFilms.sort((a, b) => +new Date(b.date) - +new Date(a.date));
-          break;
-        case `rating`:
-          sortedFilms.sort((a, b) => b.rating - a.rating);
-      }
-
-      this._renderFilms(sortedFilms);
-    };
   }
 
   /**
@@ -181,11 +180,10 @@ export default class PageController {
 
   /**
    * Отрисовывает все блоки с карточками фильмов
-   *
-   * @param {Array} films массив объектов с данными о фильмах
    */
-  _renderFilms(films) {
+  _renderFilms() {
     this._clearAll();
+    const films = this._getFilms();
 
     // если фильмов нет, отрисовываем другой шаблон
     if (!films || !films.length) {
@@ -199,9 +197,9 @@ export default class PageController {
 
     if (films.length > CARD_QUANTITY) {
       this._readMoreButton.getElement().addEventListener(`click`, () => {
-        this._renderPortionOfCards(films);
+        this._renderPortionOfCards(this._getFilms());
 
-        if (this._counter >= films.length) {
+        if (this._counter >= this._getFilms().length) {
           remove(this._readMoreButton);
         }
       });
@@ -241,6 +239,36 @@ export default class PageController {
     this._commentedExtraList = null;
 
     remove(this._readMoreButton);
+  }
+
+  /**
+   * Возвращает callback для обработчика клика по кнопке сортировки
+   *
+   * @return {Function} функция-callback для обработчика клика по кнопке сортировки
+   */
+  _getSortFilmsCallback() {
+    return (sortValue) => {
+      this._sortValue = sortValue;
+
+      this._renderFilms();
+    };
+  }
+
+  /**
+   * Отрисовывает новую карточку вместо удаленной
+   */
+  _onCardRemove() {
+    const films = this._movies.getFilms();
+
+    if (this._counter >= films.length) {
+      return;
+    }
+
+    this._renderCard(films[this._counter]);
+
+    if (this._counter >= films.length - 1) {
+      remove(this._readMoreButton);
+    }
   }
 
   /**
@@ -289,6 +317,6 @@ export default class PageController {
 
     this._sort.setHandler(this._getSortFilmsCallback());
 
-    this._renderFilms(this._movies.getFilms());
+    this._renderFilms();
   }
 }

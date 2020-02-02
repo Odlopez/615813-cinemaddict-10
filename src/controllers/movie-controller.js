@@ -7,11 +7,12 @@ import {ESC_KEYCODE, FREEZE_STYLE_CLASS_NAME, FREEZE_ANIMATION_STYLE, FREEZE_ANI
 import he from 'he';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, api) {
+  constructor(container, onDataChange, onViewChange, onCardRemove, api) {
     this._container = container;
     this._api = api;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._onCardRemove = onCardRemove;
 
     this._card = null;
     this._popup = null;
@@ -189,6 +190,7 @@ export default class MovieController {
 
     if (getActiveFilterName() === `watchlist`) {
       remove(this._card);
+      this._onCardRemove();
     }
   }
 
@@ -208,6 +210,7 @@ export default class MovieController {
 
     if (getActiveFilterName() === `history`) {
       remove(this._card);
+      this._onCardRemove();
     }
   }
 
@@ -222,6 +225,7 @@ export default class MovieController {
 
     if (getActiveFilterName() === `favorites`) {
       remove(this._card);
+      this._onCardRemove();
     }
   }
 
@@ -386,7 +390,7 @@ export default class MovieController {
 
   /**
    *
-   * @param {*} film
+   * @param {Object} film
    */
   rerender(film) {
     this.film = film;

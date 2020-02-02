@@ -48,7 +48,7 @@ export default class Store {
   }
 
   deleteComment(commentId, filmId) {
-    let store = this.getAll();
+    const store = this.getAll();
     const storeComments = this.getAllComments();
     const updatedFilm = store[filmId];
     const deletedFilmCommentFilmIndex = updatedFilm.comments.indexOf(commentId);
