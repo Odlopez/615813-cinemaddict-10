@@ -59,6 +59,27 @@ export default class PageController {
   }
 
   /**
+  * Перерисовываем в основном блоке весь соответствующий контент
+  *
+  */
+  render() {
+    this._statistic.renderChart();
+    this._statistic.setHandler((evt) => {
+      evt.preventDefault();
+
+      this._statistic.rerender();
+    });
+
+    remove(this._sort);
+    render(this._container, this._sort.getElement(), `beforebegin`);
+    render(this._container, this._statistic.getElement(), `beforebegin`);
+
+    this._sort.setHandler(this._getSortFilmsCallback());
+
+    this._renderFilms();
+  }
+
+  /**
    * Возвращает массив данных фильтра с учетом сортировки
    *
    * @return {Array}
@@ -297,26 +318,5 @@ export default class PageController {
     this._renderedFilms.forEach((item) => {
       item.setDefaultView();
     });
-  }
-
-  /**
-  * Перерисовываем в основном блоке весь соответствующий контент
-  *
-  */
-  render() {
-    this._statistic.renderChart();
-    this._statistic.setHandler((evt) => {
-      evt.preventDefault();
-
-      this._statistic.rerender();
-    });
-
-    remove(this._sort);
-    render(this._container, this._sort.getElement(), `beforebegin`);
-    render(this._container, this._statistic.getElement(), `beforebegin`);
-
-    this._sort.setHandler(this._getSortFilmsCallback());
-
-    this._renderFilms();
   }
 }

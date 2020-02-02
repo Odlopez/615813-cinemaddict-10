@@ -21,8 +21,6 @@ export default class Store {
     }
   }
 
-  dropAll() {}
-
   setItem(key, value) {
     const store = this.getAll();
 

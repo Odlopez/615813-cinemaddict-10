@@ -214,61 +214,6 @@ export default class Statistic extends AbstractComponent {
   }
 
   /**
-   * Сбрасывает график статистики
-   */
-  _resetChart() {
-    if (this._chart) {
-      this._chart.destroy();
-    }
-  }
-
-  /**
-   * Возвращает значение выбранного фильтра
-   *
-   * @return {String}
-   */
-  _getActiveFilter() {
-    const filterElements = this.getElement().querySelectorAll(`.statistic__filters-input`);
-
-    return Array.from(filterElements).find((item) => item.checked).value;
-  }
-
-  /**
-   * Возвращает список просмотренных фильтров в зависимости от фильтра
-   *
-   * @return {Array}
-   */
-  _getFilteredFilms() {
-    const filterValue = this._getActiveFilter();
-
-    switch (filterValue) {
-      case `today`:
-        return getTodayFilms(this._movies.getBaseFilms());
-
-      case `week`:
-        return getWeekFilms(this._movies.getBaseFilms());
-
-      case `month`:
-        return getMonthFilms(this._movies.getBaseFilms());
-
-      case `year`:
-        return getYearFilms(this._movies.getBaseFilms());
-    }
-
-    return this._movies.getBaseFilms();
-  }
-
-  /**
-   * Записывает блок с основной статистикой
-   */
-  _setGeneralStatistic() {
-    const statisticTextList = this.getElement().querySelector(`.statistic__text-list`);
-
-    statisticTextList.innerHTML = ``;
-    statisticTextList.innerHTML = getGeneralStatisticMarkup(this._getFilteredFilms());
-  }
-
-  /**
    * Отрисовывает статистику
    */
   renderChart() {
@@ -348,5 +293,60 @@ export default class Statistic extends AbstractComponent {
     filterElements.forEach((item) => {
       item.addEventListener(`input`, handler);
     });
+  }
+
+  /**
+   * Сбрасывает график статистики
+   */
+  _resetChart() {
+    if (this._chart) {
+      this._chart.destroy();
+    }
+  }
+
+  /**
+   * Возвращает значение выбранного фильтра
+   *
+   * @return {String}
+   */
+  _getActiveFilter() {
+    const filterElements = this.getElement().querySelectorAll(`.statistic__filters-input`);
+
+    return Array.from(filterElements).find((item) => item.checked).value;
+  }
+
+  /**
+   * Возвращает список просмотренных фильтров в зависимости от фильтра
+   *
+   * @return {Array}
+   */
+  _getFilteredFilms() {
+    const filterValue = this._getActiveFilter();
+
+    switch (filterValue) {
+      case `today`:
+        return getTodayFilms(this._movies.getBaseFilms());
+
+      case `week`:
+        return getWeekFilms(this._movies.getBaseFilms());
+
+      case `month`:
+        return getMonthFilms(this._movies.getBaseFilms());
+
+      case `year`:
+        return getYearFilms(this._movies.getBaseFilms());
+    }
+
+    return this._movies.getBaseFilms();
+  }
+
+  /**
+   * Записывает блок с основной статистикой
+   */
+  _setGeneralStatistic() {
+    const statisticTextList = this.getElement().querySelector(`.statistic__text-list`);
+
+    statisticTextList.innerHTML = ``;
+    statisticTextList.innerHTML = getGeneralStatisticMarkup(this._getFilteredFilms());
   }
 }

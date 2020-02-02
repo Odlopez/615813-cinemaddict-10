@@ -42,31 +42,6 @@ export default class Card extends AbstractComponent {
   }
 
   /**
-   * Декоратор debounce
-   *
-   * @param {Function} handler
-   * @param {Number} timeout
-   * @return {Function}
-   */
-  _debounce(handler, timeout) {
-    let isCooldown = false;
-
-    return (evt) => {
-      if (isCooldown) {
-        return;
-      }
-
-      handler(evt);
-
-      isCooldown = true;
-
-      setTimeout(() => {
-        isCooldown = false;
-      }, timeout);
-    };
-  }
-
-  /**
    * Генерирует разметку карточки фильма
    *
    * @return {String} строковое представление разметки карточки фильма
@@ -85,7 +60,6 @@ export default class Card extends AbstractComponent {
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
   }
-
 
   /**
    * Вешает обработчик клика на кнопку "Add to watchlist"
@@ -115,5 +89,30 @@ export default class Card extends AbstractComponent {
   setAddFavoriteButtonHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, this._debounce(handler, DEBOUNCE_TIMEOUT));
+  }
+
+  /**
+   * Декоратор debounce
+   *
+   * @param {Function} handler
+   * @param {Number} timeout
+   * @return {Function}
+   */
+  _debounce(handler, timeout) {
+    let isCooldown = false;
+
+    return (evt) => {
+      if (isCooldown) {
+        return;
+      }
+
+      handler(evt);
+
+      isCooldown = true;
+
+      setTimeout(() => {
+        isCooldown = false;
+      }, timeout);
+    };
   }
 }

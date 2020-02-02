@@ -33,6 +33,53 @@ export default class MovieController {
   }
 
   /**
+   * Устанавливает дефолтное положение карточки
+   */
+  setDefaultView() {
+    if (this._popup) {
+      this._closePopup();
+      this._defrostAnimation();
+    }
+  }
+
+  /**
+   *
+   * @param {Object} film объект с данными фильма
+   */
+  render(film) {
+    this.film = film;
+    this._card = new Card(film);
+
+    this._subscribeCardOnEvents();
+
+    render(this._container, this._card.getElement());
+  }
+
+  /**
+   *
+   * @param {Object} film
+   */
+  rerender(film) {
+    this.film = film;
+
+    const oldPopup = this._popup;
+    const oldCard = this._card;
+
+    this._card = new Card(film);
+
+    this._subscribeCardOnEvents();
+
+    oldCard.getElement().replaceWith(this._card.getElement());
+    remove(oldCard);
+
+    if (oldPopup) {
+      this._createPopup()
+      .then(() => oldPopup.getElement().replaceWith(this._popup.getElement()))
+      .then(() => remove(oldPopup));
+    }
+  }
+
+  /**
    * Создает объект с данными нового комментария
    *
    * @param {String} comment текст комментария
@@ -159,94 +206,6 @@ export default class MovieController {
   }
 
   /**
-   * Функция-callback обработчика клика по кнопке закрытия попапа
-   */
-  _onCloseButtonClick() {
-    this._closePopup();
-    this._defrostAnimation();
-  }
-
-  /**
-   * Функция-callback обработчика нажатия клавиши (esc) на клавиатуре
-   * закрывает попап-блок с подробной информацией о фильме
-   *
-   * @param {Event} evt
-   */
-  _onDocumentKeydown(evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      this._closePopup();
-      this._defrostAnimation();
-    }
-  }
-
-  /**
-   * Функция-callback для изменения сосотяния 'watchlist' фильма
-   */
-  _onWatchListChange() {
-    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
-      watchlist: !this.film.watchlist,
-      watchingDate: !this.film.watchlist ? new Date().toISOString() : new Date(0).toISOString()
-    }));
-
-    if (getActiveFilterName() === `watchlist`) {
-      remove(this._card);
-      this._onCardRemove();
-    }
-  }
-
-  /**
-   * Функция-callback для изменения сосотяния 'watched' фильма
-   */
-  _onWatchedChange() {
-    this._blockRating();
-
-    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
-      history: !this.film.history,
-      watchingDate: !this.film.history ? new Date().toISOString() : new Date(0).toISOString(),
-      score: this.film.history ? 0 : this.film.score
-    }))
-    .then(() => this._deblockRating())
-    .catch(() => this._deblockRating());
-
-    if (getActiveFilterName() === `history`) {
-      remove(this._card);
-      this._onCardRemove();
-    }
-  }
-
-  /**
-   * Функция-callback для изменения сосотяния 'favorites' фильма
-   */
-  _onFavoriteChange() {
-    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
-      favorites: !this.film.favorites,
-      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
-    }));
-
-    if (getActiveFilterName() === `favorites`) {
-      remove(this._card);
-      this._onCardRemove();
-    }
-  }
-
-  /**
-   * Функция-callback для изменения рейтинга фильма
-   *
-   * @param {Number} rating значение рейтинга инпута
-   */
-  _onRatingChange(rating) {
-    if (this._isRatingFormBlocked) {
-      return;
-    }
-
-    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
-      score: rating
-    }))
-    .then(() => this._deblockRating())
-    .catch(() => this._deblockRating());
-  }
-
-  /**
    * Вешает на элемент попапа обработчики событий
    */
   _subscribePopupOnEvents() {
@@ -366,49 +325,90 @@ export default class MovieController {
   }
 
   /**
-   * Устанавливает дефолтное положение карточки
+   * Функция-callback обработчика клика по кнопке закрытия попапа
    */
-  setDefaultView() {
-    if (this._popup) {
+  _onCloseButtonClick() {
+    this._closePopup();
+    this._defrostAnimation();
+  }
+
+  /**
+   * Функция-callback обработчика нажатия клавиши (esc) на клавиатуре
+   * закрывает попап-блок с подробной информацией о фильме
+   *
+   * @param {Event} evt
+   */
+  _onDocumentKeydown(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
       this._closePopup();
       this._defrostAnimation();
     }
   }
 
   /**
-   *
-   * @param {Object} film объект с данными фильма
+   * Функция-callback для изменения сосотяния 'watchlist' фильма
    */
-  render(film) {
-    this.film = film;
-    this._card = new Card(film);
+  _onWatchListChange() {
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      watchlist: !this.film.watchlist,
+      watchingDate: !this.film.watchlist ? new Date().toISOString() : new Date(0).toISOString()
+    }));
 
-    this._subscribeCardOnEvents();
-
-    render(this._container, this._card.getElement());
+    if (getActiveFilterName() === `watchlist`) {
+      remove(this._card);
+      this._onCardRemove();
+    }
   }
 
   /**
-   *
-   * @param {Object} film
+   * Функция-callback для изменения сосотяния 'watched' фильма
    */
-  rerender(film) {
-    this.film = film;
+  _onWatchedChange() {
+    this._blockRating();
 
-    const oldPopup = this._popup;
-    const oldCard = this._card;
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      history: !this.film.history,
+      watchingDate: !this.film.history ? new Date().toISOString() : new Date(0).toISOString(),
+      score: this.film.history ? 0 : this.film.score
+    }))
+    .then(() => this._deblockRating())
+    .catch(() => this._deblockRating());
 
-    this._card = new Card(film);
-
-    this._subscribeCardOnEvents();
-
-    oldCard.getElement().replaceWith(this._card.getElement());
-    remove(oldCard);
-
-    if (oldPopup) {
-      this._createPopup()
-      .then(() => oldPopup.getElement().replaceWith(this._popup.getElement()))
-      .then(() => remove(oldPopup));
+    if (getActiveFilterName() === `history`) {
+      remove(this._card);
+      this._onCardRemove();
     }
+  }
+
+  /**
+   * Функция-callback для изменения сосотяния 'favorites' фильма
+   */
+  _onFavoriteChange() {
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      favorites: !this.film.favorites,
+      watchingDate: this.watchingDate ? this.watchingDate : new Date(0).toISOString()
+    }));
+
+    if (getActiveFilterName() === `favorites`) {
+      remove(this._card);
+      this._onCardRemove();
+    }
+  }
+
+  /**
+   * Функция-callback для изменения рейтинга фильма
+   *
+   * @param {Number} rating значение рейтинга инпута
+   */
+  _onRatingChange(rating) {
+    if (this._isRatingFormBlocked) {
+      return;
+    }
+
+    this._onDataChange(this, Object.assign(Object.create(Film.prototype), this.film, {
+      score: rating
+    }))
+    .then(() => this._deblockRating())
+    .catch(() => this._deblockRating());
   }
 }

@@ -233,32 +233,6 @@ export default class FilmDetails extends AbstractComponent {
   }
 
   /**
-   * Декоратор debounce
-   *
-   * @param {Function} handler
-   * @param {Number} timeout
-   * @return {Function}
-   */
-  _debounce(handler, timeout) {
-    let isCooldown = false;
-
-    return (evt) => {
-      if (isCooldown) {
-        return;
-      }
-
-      handler(evt);
-
-      isCooldown = true;
-
-      setTimeout(() => {
-        isCooldown = false;
-      }, timeout);
-    };
-  }
-
-
-  /**
    * Генерирует разметку развернутой карточки фильма
    *
    * @return {String} строковое представление разметки карточки фильма
@@ -382,5 +356,30 @@ export default class FilmDetails extends AbstractComponent {
   setFormHandler(handler) {
     this.getElement().querySelector(`.film-details__inner`)
       .addEventListener(`keydown`, handler);
+  }
+
+  /**
+   * Декоратор debounce
+   *
+   * @param {Function} handler
+   * @param {Number} timeout
+   * @return {Function}
+   */
+  _debounce(handler, timeout) {
+    let isCooldown = false;
+
+    return (evt) => {
+      if (isCooldown) {
+        return;
+      }
+
+      handler(evt);
+
+      isCooldown = true;
+
+      setTimeout(() => {
+        isCooldown = false;
+      }, timeout);
+    };
   }
 }

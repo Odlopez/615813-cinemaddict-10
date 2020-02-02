@@ -15,29 +15,6 @@ export default class MenuController {
   }
 
   /**
-   * Удаляет со страницы отрисованное меню фильтров
-   */
-  _removeOldMenu() {
-    if (this._menu) {
-      this._menu.getElement().remove();
-      this._menu = null;
-    }
-  }
-
-  /**
-   * Обновляет количество фильмов в соответствующих категориях фильтра
-   */
-  _updatFilmQuantity() {
-    filterNames.forEach((item) => {
-      const filterLink = this._menu.getFilterLink(item);
-
-      if (filterLink) {
-        this._menu.getFilterLinkCountElement(filterLink).textContent = countsFilmAsCategory(this._movies.getBaseFilms(), item.toLocaleLowerCase());
-      }
-    });
-  }
-
-  /**
    * Отрисовывает компонент меню на странице
    *
    * @param {Array} films массив объектов с данными о фильмах
@@ -64,6 +41,29 @@ export default class MenuController {
       evt.preventDefault();
 
       this._container.classList.toggle(MAIN_STATISTIC_CLASS_NAME);
+    });
+  }
+
+  /**
+   * Удаляет со страницы отрисованное меню фильтров
+   */
+  _removeOldMenu() {
+    if (this._menu) {
+      this._menu.getElement().remove();
+      this._menu = null;
+    }
+  }
+
+  /**
+   * Обновляет количество фильмов в соответствующих категориях фильтра
+   */
+  _updatFilmQuantity() {
+    filterNames.forEach((item) => {
+      const filterLink = this._menu.getFilterLink(item);
+
+      if (filterLink) {
+        this._menu.getFilterLinkCountElement(filterLink).textContent = countsFilmAsCategory(this._movies.getBaseFilms(), item.toLocaleLowerCase());
+      }
     });
   }
 }
